@@ -1,0 +1,2 @@
+### USER ROUTES
+GET http://localhost:3001/users
