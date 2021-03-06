@@ -1,0 +1,22 @@
+{
+	"$id": "http://example.com/example.json",
+	"type": "object",
+	"additionalProperties": false,
+	"properties": {
+		"id": {
+			"$id": "/properties/id",
+			"type": "integer",
+			"title": "The ID Schema ",
+			"default": "",
+			"examples": [1234]
+		},
+		"password": {
+			"$id": "/properties/password",
+			"type": "string",
+			"title": "The Password Schema ",
+			"default": "",
+			"examples": ["foo123"]
+		}
+	},
+	"required": ["id", "password"]
+}

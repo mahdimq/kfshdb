@@ -17,8 +17,8 @@ const isAuthenticated = (req, res, next) => {
 		const payload = jwt.verify(tokenStr, SECRET);
 		if (!payload) return new ExpressError('Invalid Token', 401);
 		req.id = payload.id;
-		req.username = payload.username;
-		req.email = payload.email;
+		req.firstname = payload.firstname;
+		req.lastname = payload.lastname;
 		return next();
 	} catch (err) {
 		return next(new ExpressError('You must authenticate first.', 401));
@@ -41,8 +41,8 @@ const ensureLoggedIn = (req, res, next) => {
 		const payload = jwt.verify(tokenStr, SECRET);
 		if (!payload) return new ExpressError('Invalid Token', 401);
 		req.id = payload.id;
-		req.username = payload.username;
-		req.email = payload.email;
+		req.firstname = payload.firstname;
+		req.lastname = payload.lastname;
 
 		if (payload.id === +req.params.user_id) {
 			return next();

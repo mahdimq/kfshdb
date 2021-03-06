@@ -1,2 +1,24 @@
-### USER ROUTES
+### USER ROUTES ###
+### LOGIN USER
+POST http://localhost:3001/login
+Content-Type: application/javascript
+
+{
+  "id": 1234,
+  "password": "john"
+}
+
+### GET ALL USERS
 GET http://localhost:3001/users
+Content-Type: application/javascript
+
+### ADD NEW USER
+POST http://localhost:3001/users
+Content-Type: application/javascript
+
+{
+  "id": 9987,
+  "password": "peter",
+  "firstname": "Peter",
+  "lastname": "Parker"
+}

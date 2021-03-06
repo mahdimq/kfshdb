@@ -3,7 +3,9 @@ const { SECRET } = require('../config');
 
 const getToken = (user) => {
 	const payload = {
-		id: user.id
+		id: user.id,
+		firstname: user.firstname,
+		lastname: user.lastname
 	};
 	return jwt.sign(payload, SECRET);
 };

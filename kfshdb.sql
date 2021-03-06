@@ -51,6 +51,7 @@ CREATE TABLE "procedures" (
 
 CREATE TABLE "users" (
   "id" int PRIMARY KEY,
+  "password" varchar,
   "firstname" varchar,
   "lastname" varchar
 );

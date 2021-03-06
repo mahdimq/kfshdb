@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'test') {
 	DB_URI = process.env.DATABASE_URL || 'kfsh';
 }
 
-console.log('Using the current database', DB_URI);
+console.log('Using database', DB_URI);
 
 module.exports = {
 	SECRET,
