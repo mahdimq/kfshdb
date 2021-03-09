@@ -1,24 +1,91 @@
 ### USER ROUTES ###
 ### LOGIN USER
 POST http://localhost:3001/login
-Content-Type: application/javascript
+Content-Type: application/json
 
 {
-  "id": 1234,
-  "password": "john"
+  "id": 6789,
+  "password": "peter",
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
 }
+
+# {
+#   "id": 1234,
+#   "password": "john",
+#   "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNCwiZmlyc3RuYW1lIjoiSm9obiIsImxhc3RuYW1lIjoiQ29ubmVyIiwiaWF0IjoxNjE1MjcwMDE1fQ.d5iPv7_Fe-kRp7UvoVaKNwzhCFyxs_Wrygy63dEWRGQ"
+# }
 
 ### GET ALL USERS
 GET http://localhost:3001/users
-Content-Type: application/javascript
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
+}
 
 ### ADD NEW USER
 POST http://localhost:3001/users
-Content-Type: application/javascript
+Content-Type: application/json
 
 {
-  "id": 9987,
+  "id": 6789,
   "password": "peter",
   "firstname": "Peter",
   "lastname": "Parker"
 }
+
+# {
+#   "id": 1234,
+#   "password": "john",
+#   "firstname": "John",
+#   "lastname": "Conner"
+# }
+
+### DELETE USER (EXTREME CAUTION)
+DELETE http://localhost:3001/users/1234
+
+### PATIENT ROUTES ###
+### FIND ALL PATIENTS
+GET http://localhost:3001/patients
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
+}
+
+### ADD NEW PATIENT
+POST http://localhost:3001/patients/
+Content-Type: application/json
+
+# {
+#   "mrn": 667543,
+#   "firstname": "Peter",
+#   "lastname": "Parker",
+#   "dob": "1990-07-13",
+#   "gender": "male",
+#   "age_category": "pediatric",
+#   "nationality": "Egyptian"
+# }
+
+{
+  "mrn": 123456,
+  "firstname": "John",
+  "lastname": "Conner",
+  "dob": "2012-04-23",
+  "gender": "male",
+  "age_category": "adult",
+  "nationality": "Saudi"
+}
+
+### FIND PATIENT BY MRN
+GET http://localhost:3001/patients/667543
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
+}
+
+### UPDATE A SINGLE PATIENT
+PATCH http://localhost:3001/patients/123456
+Content-Type: application/json
+

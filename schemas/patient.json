@@ -1,0 +1,88 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"$id": "http://example.com/example.json",
+	"type": "object",
+	"title": "The root schema",
+	"description": "The root schema comprises the entire JSON document.",
+	"default": {},
+	"examples": [
+		{
+			"mrn": 123456,
+			"firstname": "John",
+			"lastname": "Conner",
+			"dob": "2012-04-23T18:25:43.511Z",
+			"gender": "male",
+			"age_category": "adult",
+			"nationality": "Saudi"
+		}
+	],
+	"required": [
+		"mrn",
+		"firstname",
+		"lastname",
+		"dob",
+		"gender",
+		"age_category",
+		"nationality"
+	],
+	"properties": {
+		"mrn": {
+			"$id": "#/properties/mrn",
+			"type": "integer",
+			"title": "The mrn schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": 0,
+			"examples": [123456]
+		},
+		"firstname": {
+			"$id": "#/properties/firstname",
+			"type": "string",
+			"title": "The firstname schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": ["John"]
+		},
+		"lastname": {
+			"$id": "#/properties/lastname",
+			"type": "string",
+			"title": "The lastname schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": ["Conner"]
+		},
+		"dob": {
+			"$id": "#/properties/dob",
+			"type": "string",
+			"format": "date",
+			"title": "The dob schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": ["2012-04-23T18:25:43.511Z"]
+		},
+		"gender": {
+			"$id": "#/properties/gender",
+			"type": "string",
+			"title": "The gender schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": ["male"]
+		},
+		"age_category": {
+			"$id": "#/properties/age_category",
+			"type": "string",
+			"title": "The age_category schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": ["adult"]
+		},
+		"nationality": {
+			"$id": "#/properties/nationality",
+			"type": "string",
+			"title": "The nationality schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": ["Saudi"]
+		}
+	},
+	"additionalProperties": true
+}

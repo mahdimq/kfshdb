@@ -18,7 +18,8 @@ CREATE TABLE "patients" (
   "lastname" varchar,
   "dob" date,
   "gender" varchar,
-  "age_catagory" varchar
+  "age_category" varchar,
+  "nationality" varchar
 );
 
 CREATE TABLE "visits" (

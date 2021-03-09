@@ -1,5 +1,6 @@
 // Import dependencies...
 const db = require('../db');
+const bcrypt = require('bcrypt');
 const ExpresError = require('../helpers/expressError');
 const { BCRYPT_WORK_FACTOR } = require('../config');
 
@@ -64,7 +65,7 @@ class User {
 			`INSERT INTO users
       (id, password, firstname, lastname)
       VALUES ($1, $2, $3, $4)
-    	RETURNING *`,
+    	RETURNING id, firstname, lastname`,
 			[data.id, hashedPassword, data.firstname, data.lastname]
 		);
 
@@ -75,7 +76,7 @@ class User {
 
 	static async findOne(user_id) {
 		const userRes = await db.query(
-			`SELECT *
+			`SELECT id, firstname, lastname
       FROM users
       WHERE id = $1`,
 			[user_id]
@@ -98,29 +99,29 @@ class User {
 	 * all the fields; this only changes provided ones.
 	 *
 	 * Return data for changed user.
-	 *
 	 */
 
-	static async update(id, data) {
-		if (data.password) {
-			data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
-		}
+	// // UPDATE USER
+	// static async update(id, data) {
+	// 	if (data.password) {
+	// 		data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+	// 	}
 
-		let { query, values } = partialUpdate('users', data, 'id', id);
+	// 	let { query, values } = partialUpdate('users', data, 'id', id);
 
-		const result = await db.query(query, values);
-		const user = result.rows[0];
+	// 	const result = await db.query(query, values);
+	// 	const user = result.rows[0];
 
-		if (!user) {
-			let notFound = new ExpressError(`User with ID: '${id}' does not exist`);
-			notFound.status = 404;
-			throw notFound;
-		}
+	// 	if (!user) {
+	// 		let notFound = new ExpressError(`User with id: '${id}' does not exist`);
+	// 		notFound.status = 404;
+	// 		throw notFound;
+	// 	}
 
-		delete user.password;
+	// 	delete user.password;
 
-		return result.rows[0];
-	}
+	// 	return result.rows[0];
+	// }
 
 	/** Delete given user from database; returns undefined. */
 
@@ -128,7 +129,7 @@ class User {
 		const result = await db.query(
 			`DELETE FROM users
       WHERE id = $1
-      RETURNING username`,
+      RETURNING firstname`,
 			[id]
 		);
 

@@ -2,7 +2,7 @@
 const express = require('express');
 const router = new express.Router();
 
-const User = require('../models/user');
+const User = require('../models/User');
 const getToken = require('../helpers/getToken');
 const { validate } = require('jsonschema');
 const { isAuthenticated, ensureLoggedIn } = require('../middleware/auth');
@@ -34,28 +34,23 @@ router.post('/', async (req, res, next) => {
 		delete req.body._token;
 		// Validate schema from json schema
 		const validation = validate(req.body, newUserSchema);
-
 		if (!validation.valid) {
 			return next({
 				status: 400,
-				message: validation.errors.map((e) => {
-					e.stack;
-				})
+				message: validation.errors.map((e) => e.stack)
 			});
 		}
 
 		const newUser = await User.register(req.body);
 		const token = getToken(newUser);
-		return res
-			.status(201)
-			.json({
-				token,
-				id: newUser.id,
-				firstname: newUser.firstname,
-				lastname: newUser.lastname
-			});
-	} catch (err) {
-		return next(err);
+		return res.status(201).json({
+			token,
+			id: newUser.id,
+			firstname: newUser.firstname,
+			lastname: newUser.lastname
+		});
+	} catch (e) {
+		return next(e);
 	}
 });
 

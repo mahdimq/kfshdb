@@ -7,8 +7,10 @@ app.use(express.json());
 
 const userRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');
+const patientRoutes = require('./routes/patients');
 
 app.use('/users', userRoutes);
+app.use('/patients', patientRoutes);
 app.use('/', authRoutes);
 
 // Custom 404 Page Not Found Error
