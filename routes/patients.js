@@ -8,7 +8,7 @@ const { validate } = require('jsonschema');
 const { patientSchema } = require('../schemas');
 const { ensureLoggedIn, isAuthenticated } = require('../middleware/auth');
 
-/** GET / => {patients: [user, ...]} */
+/** GET / => {patients: [patient, ...]} */
 
 // GET ALL PATIENTS /patients/
 router.get('/', isAuthenticated, async (req, res, next) => {

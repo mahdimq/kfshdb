@@ -24,14 +24,14 @@ CREATE TABLE "patients" (
 
 CREATE TABLE "visits" (
   "mrn" int PRIMARY KEY,
-  "procedureId" int,
+  "procedure" int,
   "techId" int,
   "physicianId" int,
   "departmentId" int
 );
 
 CREATE TABLE "patients_visits" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "mrn" int,
   "procedureLog" varchar,
   "userId" int,
@@ -58,18 +58,17 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "physicians" (
-  "id" int PRIMARY KEY,
-  "firstname" varchar,
-  "lastname" varchar
+  "id" SERIAL PRIMARY KEY,
+  "full_name" varchar
 );
 
 CREATE TABLE "departments" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "dept_name" varchar
 );
 
 CREATE TABLE "locations" (
-  "id" int PRIMARY KEY,
+  "id" SERIAL PRIMARY KEY,
   "location" varchar
 );
 
@@ -90,3 +89,9 @@ ALTER TABLE "patients_visits" ADD FOREIGN KEY ("locationId") REFERENCES "locatio
 ALTER TABLE "visits" ADD FOREIGN KEY ("departmentId") REFERENCES "departments" ("id");
 
 ALTER TABLE "patients_visits" ADD FOREIGN KEY ("procedureLog") REFERENCES "procedures" ("logNum");
+
+INSERT INTO users (id, password, firstname, lastname) VALUES (1234, 'john', 'John', 'Conner');
+INSERT INTO users (id, password, firstname, lastname) VALUES (4567, 'peter', 'Peter', 'Parker');
+INSERT INTO users (id, password, firstname, lastname) VALUES (7890, 'clark', 'Clark', 'Kent');
+
+INSERT INTO patients (mrn, firstname, )

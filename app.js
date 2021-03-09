@@ -8,9 +8,15 @@ app.use(express.json());
 const userRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');
 const patientRoutes = require('./routes/patients');
+const physicianRoutes = require('./routes/physicians');
+const departmentRoutes = require('./routes/departments');
+const locationRoutes = require('./routes/locations');
 
 app.use('/users', userRoutes);
 app.use('/patients', patientRoutes);
+app.use('/physicians', physicianRoutes);
+app.use('/locations', locationRoutes);
+app.use('/departments', departmentRoutes);
 app.use('/', authRoutes);
 
 // Custom 404 Page Not Found Error

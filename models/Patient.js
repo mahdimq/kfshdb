@@ -2,7 +2,7 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressError');
 
-// create user class and related functions
+// create patient class and related functions
 class Patient {
 	// FIND ALL PATIENTS
 

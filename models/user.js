@@ -1,7 +1,7 @@
 // Import dependencies...
 const db = require('../db');
 const bcrypt = require('bcrypt');
-const ExpresError = require('../helpers/expressError');
+const ExpressError = require('../helpers/expressError');
 const { BCRYPT_WORK_FACTOR } = require('../config');
 
 // create user class and related functions
@@ -26,7 +26,7 @@ class User {
 			}
 		}
 
-		const isNotValid = new ExpresError('Invalid Credentials');
+		const isNotValid = new ExpressError('Invalid Credentials');
 		isNotValid.status = 401;
 		throw isNotValid;
 	}
