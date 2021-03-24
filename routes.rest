@@ -77,7 +77,7 @@ Content-Type: application/json
 }
 
 ### FIND PATIENT BY MRN
-GET http://localhost:3001/patients/667543
+GET http://localhost:3001/patients/123456
 Content-Type: application/json
 
 {
