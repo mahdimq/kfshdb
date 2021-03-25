@@ -2,73 +2,75 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressError');
 
-// create departments class and related functions
-class Department {
-	// FIND ALL DEPARTMENTS
+// create test class and related functions
+class Test {
+	// FIND ALL TESTS
+
 	static async findAll() {
 		const result = await db.query(
 			`SELECT *
-      FROM departments
-      ORDER BY name ASC`
+      FROM tests`
 		);
 
 		return result.rows;
 	}
 
-	// FIND ONE DEPARTMENT
-	static async findOne(id) {
+	// FIND ONE TEST
+
+	static async findOne(cpt) {
 		const result = await db.query(
 			`SELECT *
-      FROM departments
-      WHERE id = $1`,
-			[id]
+      FROM tests
+      WHERE cpt = $1`,
+			[cpt]
 		);
 
 		return result.rows[0];
 	}
 
-	// ADD A NEW DEPARTMENT
+	// ADD A NEW TEST
+
 	static async add(data) {
 		const duplicateCheck = await db.query(
 			`SELECT *
-      FROM departments
-      WHERE name = $1`,
-			[data.name]
+      FROM tests
+      WHERE cpt = $1`,
+			[data.cpt]
 		);
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Department: '${data.name}' already exists`);
+			const err = new ExpressError(`Test: '${data.cpt}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
 		const result = await db.query(
-			`INSERT INTO departments
-      (name)
-      VALUES ($1)
+			`INSERT INTO tests
+      (cpt, description, quantity)
+      VALUES ($1, $2, $3)
     	RETURNING *`,
-			[data.name]
+			[data.cpt, data.description, data.quantity]
 		);
 
 		return result.rows[0];
 	}
 
-	// DELETE A DEPARTMENT (ADMIN PRIVELAGE)
+	// DELETE A TEST (ADMIN PRIVELAGE)
 
 	static async remove(id) {
 		const result = await db.query(
-			`DELETE FROM departments
+			`DELETE FROM tests
       WHERE id = $1
-      RETURNING name`,
+      RETURNING cpt, description`,
 			[id]
 		);
 
 		if (result.rows.length === 0) {
-			const notFound = new ExpressError(`Department does not exist`);
+			const notFound = new ExpressError(`Test does not exist`);
 			notFound.status = 404;
 			throw notFound;
 		}
 	}
 }
 
-module.exports = Department;
+module.exports = Test;

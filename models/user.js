@@ -2,6 +2,7 @@
 const db = require('../db');
 const bcrypt = require('bcrypt');
 const ExpressError = require('../helpers/expressError');
+const partialUpdate = require("../helpers/partialUpdate")
 const { BCRYPT_WORK_FACTOR } = require('../config');
 
 // create user class and related functions
@@ -10,7 +11,7 @@ class User {
 
 	static async authenticate(data) {
 		const result = await db.query(
-			`SELECT id, password, firstname, lastname
+			`SELECT id, firstname, lastname, password, is_admin
       FROM users
       WHERE id = $1`,
 			[data.id]
@@ -35,11 +36,12 @@ class User {
 
 	static async findAll() {
 		const result = await db.query(
-			`SELECT id, firstname, lastname
+			`SELECT *
       FROM users
       ORDER BY id`
 		);
-
+		
+		if (result.rows.length === 0) throw new ExpressError('Users not found', 404);
 		return result.rows;
 	}
 
@@ -62,13 +64,13 @@ class User {
 		const hashedPassword = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
 
 		const result = await db.query(
-			`INSERT INTO users
-      (id, password, firstname, lastname)
-      VALUES ($1, $2, $3, $4)
-    	RETURNING id, firstname, lastname`,
-			[data.id, hashedPassword, data.firstname, data.lastname]
-		);
+				`INSERT INTO users (id, firstname, lastname, password, is_admin)
+				VALUES ($1, $2, $3, $4, $5)
+				RETURNING id, firstname, lastname, is_admin`,
+				[data.id, data.firstname, data.lastname, hashedPassword, data.is_admin]
+				);
 
+				if (result.rows.length === 0) throw new ExpressError('User could not be added', 400);
 		return result.rows[0];
 	}
 
@@ -101,27 +103,27 @@ class User {
 	 * Return data for changed user.
 	 */
 
-	// // UPDATE USER
-	// static async update(id, data) {
-	// 	if (data.password) {
-	// 		data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
-	// 	}
+	// UPDATE USER
+	static async update(id, data) {
+		if (data.password) {
+			data.password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+		}
 
-	// 	let { query, values } = partialUpdate('users', data, 'id', id);
+		const { query, values } = partialUpdate('users', data, 'id', id);
 
-	// 	const result = await db.query(query, values);
-	// 	const user = result.rows[0];
+		const result = await db.query(query, values);
+		const user = result.rows[0];
 
-	// 	if (!user) {
-	// 		let notFound = new ExpressError(`User with id: '${id}' does not exist`);
-	// 		notFound.status = 404;
-	// 		throw notFound;
-	// 	}
+		if (!user) {
+			let notFound = new ExpressError(`User with id: '${id}' does not exist`);
+			notFound.status = 404;
+			throw notFound;
+		}
 
-	// 	delete user.password;
+		delete user.password;
 
-	// 	return result.rows[0];
-	// }
+		return result.rows[0];
+	}
 
 	/** Delete given user from database; returns undefined. */
 

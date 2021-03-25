@@ -5,7 +5,8 @@ const getToken = (user) => {
 	const payload = {
 		id: user.id,
 		firstname: user.firstname,
-		lastname: user.lastname
+		lastname: user.lastname,
+		is_admin: user.is_admin
 	};
 	return jwt.sign(payload, SECRET);
 };

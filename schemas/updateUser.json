@@ -1,0 +1,50 @@
+{
+	"$id": "http://example.com/example.json",
+	"type": "object",
+	"additionalProperties": false,
+  
+	"properties": {
+		"password": {
+			"$id": "/properties/password",
+			"type": "string",
+			"title": "The Password Schema ",
+			"default": "",
+			"minLength": 5,
+			"maxLength": 55,
+			"examples": ["foo123"]
+		},
+		"firstname": {
+			"$id": "/properties/firstname",
+			"type": "string",
+			"title": "The FirstName Schema ",
+			"default": "",
+			"minLength": 1,
+			"maxLength": 55,
+			"examples": ["Michael"]
+		},
+		"lastname": {
+			"$id": "/properties/lastname",
+			"type": "string",
+			"title": "The LastName Schema ",
+			"default": "",
+			"minLength": 1,
+			"maxLength": 55,
+			"examples": ["Hueter"]
+		},
+		"is_admin": {
+			"$id": "#/properties/is_admin",
+			"type": "boolean",
+			"title": "The is_admin schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": false,
+			"examples": [true]
+		},
+		"_token": {
+			"$id": "/properties/token",
+			"type": "string",
+			"title": "The Token Schema ",
+			"default": "",
+			"examples": ["foo123"]
+		}
+	}
+}

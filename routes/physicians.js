@@ -6,10 +6,10 @@ const router = new express.Router();
 const Physician = require('../models/Physician');
 const { validate } = require('jsonschema');
 const { physicianSchema } = require('../schemas');
-const { ensureLoggedIn, isAuthenticated } = require('../middleware/auth');
+const { isAuthenticated, ensureIsAdmin } = require('../middleware/auth');
 
 // GET ALL PHYSICIANS /physicians/
-router.get('/', async (req, res, next) => {
+router.get('/', isAuthenticated, async (req, res, next) => {
 	try {
 		const physicians = await Physician.findAll();
 		return res.json({ physicians });
@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
 
 /** GET /[id] => {physician: physician} */
 // GET A SINGLE PHYSICIAN BY NAME /physicians/:id
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', isAuthenticated, async (req, res, next) => {
 	try {
 		const physician = await Physician.findOne(req.params.id);
 		return res.json({ physician });
@@ -33,7 +33,7 @@ router.get('/:id', async (req, res, next) => {
 // REGISTER A physician /physician/
 
 // ADD A NEW PHYSICIAN
-router.post('/', async (req, res, next) => {
+router.post('/', ensureIsAdmin, async (req, res, next) => {
 	try {
 		delete req.body._token;
 		// Validate schema from json schema
@@ -47,7 +47,9 @@ router.post('/', async (req, res, next) => {
 
 		const newPhysician = await Physician.add(req.body);
 		return res.status(201).json({
-			name: newPhysician.full_name
+			firstname: newPhysician.firstname,
+			lastname: newPhysician.lastname,
+			department_id: newPhysician.department_id
 		});
 	} catch (e) {
 		return next(e);
@@ -56,7 +58,7 @@ router.post('/', async (req, res, next) => {
 
 /** DELETE /[handle]  =>  {message: "Physician deleted"}  */
 // DELETE A SINGLE PHYSICIAN physicians/:name
-router.delete('/:id', isAuthenticated, async (req, res, next) => {
+router.delete('/:id', ensureIsAdmin, async (req, res, next) => {
 	try {
 		await Physician.remove(req.params.id);
 		return res.json({ message: `Physician: ${req.params.id} has been deleted` });

@@ -10,10 +10,23 @@ class Location {
 		const result = await db.query(
 			`SELECT *
       FROM locations
-      ORDER BY location ASC`
+      ORDER BY name ASC`
 		);
 
 		return result.rows;
+	}
+
+	// FIND ONE LOCATION
+
+	static async findOne(id) {
+		const result = await db.query(
+			`SELECT *
+      FROM locations
+      WHERE id = $1`,
+			[id]
+		);
+
+		return result.rows[0];
 	}
 
 	// ADD A NEW LOCATION
@@ -22,22 +35,22 @@ class Location {
 		const duplicateCheck = await db.query(
 			`SELECT *
       FROM locations
-      WHERE location = $1`,
-			[data.location]
+      WHERE name = $1`,
+			[data.name]
 		);
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Location: '${data.location}' already exists`);
+			const err = new ExpressError(`Location: '${data.name}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
 		const result = await db.query(
 			`INSERT INTO locations
-      (location)
+      (name)
       VALUES ($1)
     	RETURNING *`,
-			[data.location]
+			[data.name]
 		);
 
 		return result.rows[0];
@@ -49,7 +62,7 @@ class Location {
 		const result = await db.query(
 			`DELETE FROM locations
       WHERE id = $1
-      RETURNING location`,
+      RETURNING name`,
 			[id]
 		);
 

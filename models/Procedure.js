@@ -2,24 +2,26 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressError');
 
-// create departments class and related functions
-class Department {
-	// FIND ALL DEPARTMENTS
+// create procedure class and related functions
+class Procedure {
+	// FIND ALL PROCEDURES
+
 	static async findAll() {
 		const result = await db.query(
 			`SELECT *
-      FROM departments
+      FROM procedures
       ORDER BY name ASC`
 		);
 
 		return result.rows;
 	}
 
-	// FIND ONE DEPARTMENT
+	// FIND ONE PROCEDURE
+
 	static async findOne(id) {
 		const result = await db.query(
 			`SELECT *
-      FROM departments
+      FROM procedures
       WHERE id = $1`,
 			[id]
 		);
@@ -27,23 +29,24 @@ class Department {
 		return result.rows[0];
 	}
 
-	// ADD A NEW DEPARTMENT
+	// ADD A NEW PROCEDURE
+
 	static async add(data) {
 		const duplicateCheck = await db.query(
 			`SELECT *
-      FROM departments
+      FROM procedures
       WHERE name = $1`,
 			[data.name]
 		);
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Department: '${data.name}' already exists`);
+			const err = new ExpressError(`Procedure: '${data.name}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
 		const result = await db.query(
-			`INSERT INTO departments
+			`INSERT INTO procedures
       (name)
       VALUES ($1)
     	RETURNING *`,
@@ -53,22 +56,22 @@ class Department {
 		return result.rows[0];
 	}
 
-	// DELETE A DEPARTMENT (ADMIN PRIVELAGE)
+	// DELETE A PROCEDURE (ADMIN PRIVELAGE)
 
 	static async remove(id) {
 		const result = await db.query(
-			`DELETE FROM departments
+			`DELETE FROM procedures
       WHERE id = $1
       RETURNING name`,
 			[id]
 		);
 
 		if (result.rows.length === 0) {
-			const notFound = new ExpressError(`Department does not exist`);
+			const notFound = new ExpressError(`Procedure does not exist`);
 			notFound.status = 404;
 			throw notFound;
 		}
 	}
 }
 
-module.exports = Department;
+module.exports = Procedure;

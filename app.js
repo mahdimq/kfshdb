@@ -11,12 +11,16 @@ const patientRoutes = require('./routes/patients');
 const physicianRoutes = require('./routes/physicians');
 const departmentRoutes = require('./routes/departments');
 const locationRoutes = require('./routes/locations');
+const procedureRoutes = require('./routes/procedures');
+const testRoutes = require('./routes/tests');
 
 app.use('/users', userRoutes);
 app.use('/patients', patientRoutes);
 app.use('/physicians', physicianRoutes);
-app.use('/locations', locationRoutes);
 app.use('/departments', departmentRoutes);
+app.use('/locations', locationRoutes);
+app.use('/procedures', procedureRoutes);
+app.use('/tests', testRoutes);
 app.use('/', authRoutes);
 
 // Custom 404 Page Not Found Error

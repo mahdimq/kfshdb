@@ -10,7 +10,7 @@ class Physician {
 		const result = await db.query(
 			`SELECT *
       FROM physicians
-      ORDER BY full_name ASC`
+      ORDER BY firstname ASC`
 		);
 
 		return result.rows;
@@ -22,22 +22,22 @@ class Physician {
 		const duplicateCheck = await db.query(
 			`SELECT *
       FROM physicians
-      WHERE full_name = $1`,
-			[data.full_name]
+      WHERE firstname = $1 AND lastname = $2`,
+			[data.firstname, data.lastname]
 		);
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Physician: '${data.full_name}' already exists`);
+			const err = new ExpressError(`Physician: '${data.firstname} ${data.lastname}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
 		const result = await db.query(
 			`INSERT INTO physicians
-      (full_name)
-      VALUES ($1)
-    	RETURNING *`,
-			[data.full_name]
+      (firstname, lastname, department_id)
+      VALUES ($1, $2, $3)
+    	RETURNING firstname, lastname, departmenr_id`,
+			[data.firstname, data.lastname, data.department_id]
 		);
 
 		return result.rows[0];
@@ -95,7 +95,7 @@ class Physician {
 		const result = await db.query(
 			`DELETE FROM physicians
       WHERE id = $1
-      RETURNING full_name`,
+      RETURNING firstname, lastname`,
 			[id]
 		);
 

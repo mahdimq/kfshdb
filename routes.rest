@@ -4,44 +4,140 @@ POST http://localhost:3001/login
 Content-Type: application/json
 
 {
-  "id": 6789,
-  "password": "peter"
+  "id": 2345,
+  "password": "password"
 }
 
-# {
-#   "id": 1234,
-#   "password": "john",
-#   "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNCwiZmlyc3RuYW1lIjoiSm9obiIsImxhc3RuYW1lIjoiQ29ubmVyIiwiaWF0IjoxNjE1MjcwMDE1fQ.d5iPv7_Fe-kRp7UvoVaKNwzhCFyxs_Wrygy63dEWRGQ"
-# }
-
-### GET ALL USERS
+### GET ALL USERS (isAuthenticated)
 GET http://localhost:3001/users
 Content-Type: application/json
 
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3Nzk3MX0.pVAWv8QtCkKV8ErEmMfqTUjqSdlBiOAjkAYDEtz5dpI"
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
 }
+
+### GET SINGLE USER (ensureLoggedIn)
+GET http://localhost:3001/users/1234
+Content-Type: application/json
+
+# ADMIN TOKEN
+# {
+#   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
+#  }
+
+# USER TOKEN
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+ }
+
 
 ### ADD NEW USER
 POST http://localhost:3001/users
 Content-Type: application/json
 
-# {
-#   "id": 6789,
-#   "password": "peter",
-#   "firstname": "Peter",
-#   "lastname": "Parker"
-# }
-
 {
-  "id": 1234,
-  "password": "john",
-  "firstname": "John",
-  "lastname": "Conner"
+  "id": 4567,
+  "password": "password",
+  "firstname": "Harry",
+  "lastname": "Potter",
+  "is_admin": false
 }
 
-### DELETE USER (EXTREME CAUTION)
-DELETE http://localhost:3001/users/1234
+
+### UPDATE USER (ADMIN PRIVELAGE REQUIRED)
+PATCH http://localhost:3001/users/1234
+Content-Type: application/json
+
+{
+  "password": "password",
+  "is_admin": false,
+  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiQWRtaW4iLCJsYXN0bmFtZSI6IlVzZXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjE2NjY0MjQwfQ.w_6qrKqKrBUhzs6QF7HrxWTs8o97vuzDlPO-P8FTHU4"
+}
+
+
+### DELETE USER (EXTREME CAUTION) (isAdmin/ensureLoggedIn)
+DELETE http://localhost:3001/users/1111
+Content-Type: application/json
+
+# ADMIN TOKEN
+{
+  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiQWRtaW4iLCJsYXN0bmFtZSI6IlVzZXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjE2NjY0MjQwfQ.w_6qrKqKrBUhzs6QF7HrxWTs8o97vuzDlPO-P8FTHU4"
+}
+
+# USER TOKEN
+# {
+#   "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+# }
+
+### PHYSICIAN ROUTES ###
+### GET ALL PHYSICIANS
+GET http://localhost:3001/physicians
+Content-Type: application/json
+
+### ADD A PHYSICIAN
+POST http://localhost:3001/physicians
+Content-Type: application/json
+
+{
+  "firstname": "Roaa",
+  "lastname": "AlKhallaf",
+  "department_id": 1
+}
+
+
+### DELETE A PHYSICIAN
+DELETE http://localhost:3001/physicians/14
+Content-Type: application/json
+
+{
+  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI4MDA4N30.ciR81HBgyin2VXKLDvOcbeWR2K5lBz2FIk71EQqvrFo"
+}
+
+### DEPARTMENT/LOCATION/PROCEDURE/TESTS ROUTES ###
+GET http://localhost:3001/locations
+Content-Type: application/json
+
+
+# ADMIN TOKEN
+# {
+#   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
+#  }
+
+# USER TOKEN
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+}
+
+### GET SINGLE 
+GET http://localhost:3001/tests/23396
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+}
+
+### ADD SINGLE
+POST http://localhost:3001/tests
+Content-Type: application/json
+
+# ADMIN TOKEN
+{
+  "cpt": 23396,
+  "description": "Upper & Lower MEP",
+  "quantity": 2,
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
+ }
+
+### REMOVE SINGLE
+DELETE http://localhost:3001/locations/11
+Content-Type: application/json
+
+# ADMIN TOKEN
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
+ }
+
+
 
 ### PATIENT ROUTES ###
 ### FIND ALL PATIENTS
@@ -49,7 +145,7 @@ GET http://localhost:3001/patients
 Content-Type: application/json
 
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
 }
 
 ### ADD NEW PATIENT
@@ -86,30 +182,4 @@ Content-Type: application/json
 
 ### UPDATE A SINGLE PATIENT
 PATCH http://localhost:3001/patients/123456
-Content-Type: application/json
-
-### PHYSICIAN ROUTES ###
-### GET ALL PHYSICIANS
-GET http://localhost:3001/physicians
-Content-Type: application/json
-
-### ADD A PHYSICIAN
-POST http://localhost:3001/physicians
-Content-Type: application/json
-
-{
-  "full_name": "Roaa Al Khallaf"
-}
-
-
-### DELETE A PHYSICIAN
-DELETE http://localhost:3001/physicians/14
-Content-Type: application/json
-
-{
-  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI4MDA4N30.ciR81HBgyin2VXKLDvOcbeWR2K5lBz2FIk71EQqvrFo"
-}
-
-### DEPARTMENT/LOCATION ROUTES ###
-GET http://localhost:3001/departments
 Content-Type: application/json

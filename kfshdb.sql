@@ -18,7 +18,7 @@ CREATE TABLE "users" (
   "firstname" varchar,
   "lastname" varchar,
   "password" varchar,
-  "is_admin" boolean
+  "is_admin" BOOLEAN NOT NULL default FALSE
 );
 
 CREATE TABLE "physicians" (

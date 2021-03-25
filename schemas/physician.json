@@ -7,18 +7,36 @@
 	"default": {},
 	"examples": [
 		{
-			"full_name": "Tom De Cat"
+			"firstname": "Tom",
+			"lastname": "DeCat",
+			"department_id": 1
 		}
 	],
-	"required": ["full_name"],
+	"required": ["firstname", "lastname", "department_id"],
 	"properties": {
-		"full_name": {
-			"$id": "#/properties/full_name",
+		"firstname": {
+			"$id": "#/properties/firstname",
 			"type": "string",
-			"title": "The full_name schema",
+			"title": "The firstname schema",
 			"description": "An explanation about the purpose of this instance.",
 			"default": "",
-			"examples": ["Tom De Cat"]
+			"examples": ["Tom"]
+		},
+		"lastname": {
+			"$id": "#/properties/lastname",
+			"type": "string",
+			"title": "The lastname schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": ["DeCat"]
+		},
+		"department_id":{
+			"$id": "#/properties/department_id",
+			"type": "integer",
+			"title": "The department_id schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": [1]
 		}
 	},
 	"additionalProperties": true

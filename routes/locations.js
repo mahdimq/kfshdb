@@ -4,10 +4,10 @@ const express = require('express');
 const router = new express.Router();
 
 const Location = require('../models/Location');
-const { ensureLoggedIn, isAuthenticated } = require('../middleware/auth');
+const {  isAuthenticated, ensureIsAdmin } = require('../middleware/auth');
 
 // GET ALL PHYSICIANS /locations/
-router.get('/', async (req, res, next) => {
+router.get('/', isAuthenticated, async (req, res, next) => {
 	try {
 		const locations = await Location.findAll();
 		return res.json({ locations });
@@ -31,21 +31,11 @@ router.get('/:id', async (req, res, next) => {
 // REGISTER A location /location/
 
 // ADD A NEW LOCATION
-router.post('/', ensureLoggedIn, isAuthenticated, async (req, res, next) => {
+router.post('/', ensureIsAdmin, async (req, res, next) => {
 	try {
-		delete req.body._token;
-		// Validate schema from json schema
-		const validation = validate(req.body, physicianSchema);
-		if (!validation.valid) {
-			return next({
-				status: 400,
-				message: validation.errors.map((e) => e.stack)
-			});
-		}
-
-		const newPhysician = await Location.add(req.body);
+		const newLocation = await Location.add(req.body);
 		return res.status(201).json({
-			name: newPhysician.full_name
+			name: newLocation.name
 		});
 	} catch (e) {
 		return next(e);
@@ -54,7 +44,7 @@ router.post('/', ensureLoggedIn, isAuthenticated, async (req, res, next) => {
 
 /** DELETE /[handle]  =>  {message: "Location deleted"}  */
 // DELETE A SINGLE LOCATION locations/:name
-router.delete('/:id', isAuthenticated, ensureLoggedIn, async (req, res, next) => {
+router.delete('/:id', ensureIsAdmin, async (req, res, next) => {
 	try {
 		await Location.remove(req.params.id);
 		return res.json({ message: `Location: ${req.params.id} has been deleted` });

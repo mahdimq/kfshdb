@@ -10,10 +10,11 @@
 			"id": 1234,
 			"password": "john",
 			"firstname": "John",
-			"lastname": "Conner"
+			"lastname": "Conner",
+			"is_admin": false
 		}
 	],
-	"required": ["id", "password"],
+	"required": ["id", "password", "is_admin"],
 	"properties": {
 		"id": {
 			"$id": "/properties/id",
@@ -22,14 +23,6 @@
 			"description": "An explanation about the purpose of this instance.",
 			"default": 0,
 			"examples": [1234]
-		},
-		"password": {
-			"$id": "/properties/password",
-			"type": "string",
-			"title": "The password schema",
-			"description": "An explanation about the purpose of this instance.",
-			"default": "",
-			"examples": ["john"]
 		},
 		"firstname": {
 			"$id": "/properties/firstname",
@@ -46,6 +39,22 @@
 			"description": "An explanation about the purpose of this instance.",
 			"default": "",
 			"examples": ["Conner"]
+		},
+		"password": {
+			"$id": "/properties/password",
+			"type": "string",
+			"title": "The password schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": "",
+			"examples": ["john"]
+		},
+		"is_admin": {
+			"$id": "#/properties/is_admin",
+			"type": "boolean",
+			"title": "The is_admin schema",
+			"description": "An explanation about the purpose of this instance.",
+			"default": false,
+			"examples": [false]
 		}
 	},
 	"additionalProperties": true
