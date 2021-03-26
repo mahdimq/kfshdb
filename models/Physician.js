@@ -36,7 +36,7 @@ class Physician {
 			`INSERT INTO physicians
       (firstname, lastname, department_id)
       VALUES ($1, $2, $3)
-    	RETURNING firstname, lastname, departmenr_id`,
+    	RETURNING firstname, lastname, department_id`,
 			[data.firstname, data.lastname, data.department_id]
 		);
 

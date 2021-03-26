@@ -10,8 +10,8 @@ DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS locations;
 DROP TABLE IF EXISTS procedures;
 DROP TABLE IF EXISTS tests;
+DROP TABLE IF EXISTS procedures_tests;
 DROP TABLE IF EXISTS visits;
-DROP TABLE IF EXISTS visits_tests;
 
 CREATE TABLE "users" (
   "id" int PRIMARY KEY,
@@ -51,54 +51,53 @@ CREATE TABLE "locations" (
 
 CREATE TABLE "procedures" (
   "id" SERIAL PRIMARY KEY,
-  "name" varchar
+  "log_num" varchar,
+  "ped_log_num" varchar,
+  "name" varchar,
+  "visit_id" int
 );
 
 CREATE TABLE "tests" (
   "cpt" varchar PRIMARY KEY,
-  "description" varchar,
+  "description" varchar
+);
+
+CREATE TABLE "procedures_tests" (
+  "id" SERIAL PRIMARY KEY,
+  "procedure_id" int,
+  "test_cpt" varchar,
   "quantity" int
 );
 
 CREATE TABLE "visits" (
   "id" SERIAL PRIMARY KEY,
-  "log_num" varchar,
-  "ped_log_num" varchar,
   "patient_mrn" int,
-  "procedure_id" int,
   "physician_id" int,
   "user_id" int,
-  "department_id" int,
   "location_id" int,
   "visit_date" date,
   "status" varchar
 );
 
-CREATE TABLE "visits_tests" (
-  "id" SERIAL PRIMARY KEY,
-  "visit_id" int,
-  "test_id" int
-);
 
 ALTER TABLE "visits" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE;
 ALTER TABLE "visits" ADD FOREIGN KEY ("physician_id") REFERENCES "physicians" ("id") ON DELETE CASCADE;
-ALTER TABLE "visits" ADD FOREIGN KEY ("procedure_id") REFERENCES "procedures" ("id") ON DELETE CASCADE;
 ALTER TABLE "visits" ADD FOREIGN KEY ("location_id") REFERENCES "locations" ("id") ON DELETE CASCADE;
-ALTER TABLE "visits" ADD FOREIGN KEY ("department_id") REFERENCES "departments" ("id") ON DELETE CASCADE;
 ALTER TABLE "visits" ADD FOREIGN KEY ("patient_mrn") REFERENCES "patients" ("mrn") ON DELETE CASCADE;
-ALTER TABLE "visits_tests" ADD FOREIGN KEY ("visit_id") REFERENCES "visits" ("id") ON DELETE CASCADE;
-ALTER TABLE "visits_tests" ADD FOREIGN KEY ("test_id") REFERENCES "tests" ("cpt") ON DELETE CASCADE;
 ALTER TABLE "physicians" ADD FOREIGN KEY ("department_id") REFERENCES "departments" ("id") ON DELETE CASCADE;
+ALTER TABLE "procedures" ADD FOREIGN KEY ("visit_id") REFERENCES "visits" ("id") ON DELETE CASCADE;
+ALTER TABLE "procedures_tests" ADD FOREIGN KEY ("procedure_id") REFERENCES "procedures" ("id") ON DELETE CASCADE;
+ALTER TABLE "procedures_tests" ADD FOREIGN KEY ("test_cpt") REFERENCES "tests" ("cpt") ON DELETE CASCADE;
 
 -- SEED DATA FPR SCHEMA --
 
-INSERT INTO users (id, firstname, lastname, password, is_admin)
-VALUES
-(1234, 'John', 'Conner', 'password', true),
-(2345, 'Clark', 'Kent', 'password', false),
-(3456, 'Harry', 'Potter', 'password', true),
-(4567, 'Muhammad', 'Ali', 'password', false)
-RETURNING *;
+-- INSERT INTO users (id, firstname, lastname, password, is_admin)
+-- VALUES
+-- (1234, 'John', 'Conner', 'password', true),
+-- (2345, 'Clark', 'Kent', 'password', false),
+-- (3456, 'Harry', 'Potter', 'password', true),
+-- (4567, 'Muhammad', 'Ali', 'password', false)
+-- RETURNING *;
 
 INSERT INTO departments (name)
 VALUES
@@ -143,13 +142,13 @@ VALUES
 ('VEP')
 RETURNING *;
 
-INSERT INTO tests (cpt, description, quantity)
+INSERT INTO tests (cpt, description)
 VALUES
-(91986, 'Awake & Asleep', 1),
-(98213, 'Long Term Monitoring', 1),
-(23478, 'Upper & Lower SSEP', 1),
-(23876, '3-4 Nerves', 3),
-(13232, '2 Muscle EMG', 4)
+(91986, 'Awake & Asleep'),
+(98213, 'Long Term Monitoring'),
+(23478, 'Upper & Lower SSEP'),
+(23876, '3-4 Nerves'),
+(13232, '2 Muscle EMG')
 RETURNING *;
 
  INSERT INTO patients (mrn, firstname, middlename, lastname, gender, dob, age_group, nationality)
@@ -160,23 +159,13 @@ RETURNING *;
  (92837, 'Samuel', 'Lance', 'Brown', 'male' , '2015-10-30', 'pediatric', 'saudi')
  RETURNING *;
 
-INSERT INTO visits (log_num, ped_log_num, patient_mrn, procedure_id, physician_id, user_id, department_id, location_id, visit_date, status)
+INSERT INTO visits (patient_mrn, physician_id, user_id, location_id, visit_date, status)
 VALUES
-('21-003', '',123456, 1, 3, 1234, 1, 3, '2021-01-13', 'complete'),
-('21-004', '',183643, 2, 6, 2345, 4, 3, '2021-03-14', 'rescheduled'),
-('20-123', '',183643, 4, 8, 3456, 3, 5, '2021-01-13', 'complete'),
-('20-876', '',92837, 3, 4, 1234, 1, 6, '2021-01-13', 'complete'),
-('21-345', 'P-21-108', 2348, 2, 5, 4567, 2, 3, '2021-01-13', 'complete'),
-('21-345', 'P-21-108', 2348, 3, 5, 4567, 2, 3, '2021-01-13', 'complete'),
-('21-561', 'P-21-200', 123456, 1, 2, 1234, 2, 7, '2021-01-13', 'complete')
-RETURNING *;
-
-INSERT INTO visits_tests (visit_id, test_id)
-VALUES
-(1, 91986),
-(2, 23876),
-(3, 23478),
-(5, 23876),
-(5, 13232),
-(4, 91986)
+(123456, 1, 1234, 1, '2021-01-13', 'complete'),
+(183643, 2, 2345, 4, '2021-03-14', 'rescheduled'),
+(183643, 4, 3456, 3, '2021-01-13', 'complete'),
+(92837, 3, 1234, 1, '2021-01-13', 'complete'),
+(2348, 2, 4567, 2, '2021-01-13', 'complete'),
+(2348, 3, 4567, 2, '2021-01-13', 'complete'),
+(123456, 1, 1234, 2, '2021-01-13', 'complete')
 RETURNING *;

@@ -16,30 +16,30 @@ Content-Type: application/json
   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
 }
 
-### GET SINGLE USER (ensureLoggedIn)
+### GET SINGLE USER (ensureLoggedIn/admin)
 GET http://localhost:3001/users/1234
 Content-Type: application/json
 
 # ADMIN TOKEN
-# {
-#   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
-#  }
-
-# USER TOKEN
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
  }
 
+# # USER TOKEN
+# {
+#   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzNCwiZmlyc3RuYW1lIjoiSm9obiIsImxhc3RuYW1lIjoiQ29ubmVyIiwiaXNfYWRtaW4iOmZhbHNlLCJpYXQiOjE2MTY2OTc4MDB9.CX8TTZe84r57kS8O7NwcPwbAJMT7arfex8LWmXmNAjA"
+#  }
 
-### ADD NEW USER
+
+### ADD NEW USER 
 POST http://localhost:3001/users
 Content-Type: application/json
 
 {
-  "id": 4567,
+  "id": 3456,
   "password": "password",
-  "firstname": "Harry",
-  "lastname": "Potter",
+  "firstname": "John",
+  "lastname": "Conner",
   "is_admin": false
 }
 
@@ -51,7 +51,7 @@ Content-Type: application/json
 {
   "password": "password",
   "is_admin": false,
-  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiQWRtaW4iLCJsYXN0bmFtZSI6IlVzZXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjE2NjY0MjQwfQ.w_6qrKqKrBUhzs6QF7HrxWTs8o97vuzDlPO-P8FTHU4"
+  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY5ODA0OX0.4_gTAwv1lbKfJwGyt44CPlUiy6qJNiMlWI9Ry4dixlo"
 }
 
 
@@ -74,6 +74,10 @@ Content-Type: application/json
 GET http://localhost:3001/physicians
 Content-Type: application/json
 
+{
+  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+}
+
 ### ADD A PHYSICIAN
 POST http://localhost:3001/physicians
 Content-Type: application/json
@@ -81,7 +85,8 @@ Content-Type: application/json
 {
   "firstname": "Roaa",
   "lastname": "AlKhallaf",
-  "department_id": 1
+  "department_id": 1,
+  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiQWRtaW4iLCJsYXN0bmFtZSI6IlVzZXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjE2NjY0MjQwfQ.w_6qrKqKrBUhzs6QF7HrxWTs8o97vuzDlPO-P8FTHU4"
 }
 
 
@@ -94,7 +99,7 @@ Content-Type: application/json
 }
 
 ### DEPARTMENT/LOCATION/PROCEDURE/TESTS ROUTES ###
-GET http://localhost:3001/locations
+GET http://localhost:3001/tests
 Content-Type: application/json
 
 
@@ -105,11 +110,11 @@ Content-Type: application/json
 
 # USER TOKEN
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY5ODA0OX0.4_gTAwv1lbKfJwGyt44CPlUiy6qJNiMlWI9Ry4dixlo"
 }
 
 ### GET SINGLE 
-GET http://localhost:3001/tests/23396
+GET http://localhost:3001/departments/1
 Content-Type: application/json
 
 {
@@ -173,7 +178,7 @@ Content-Type: application/json
 }
 
 ### FIND PATIENT BY MRN
-GET http://localhost:3001/patients/123456
+GET http://localhost:3001/patients/2348
 Content-Type: application/json
 
 {
@@ -183,3 +188,12 @@ Content-Type: application/json
 ### UPDATE A SINGLE PATIENT
 PATCH http://localhost:3001/patients/123456
 Content-Type: application/json
+
+### VISIT ROUTE ###
+### GET ALL
+GET http://localhost:3001/visits
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
+}
