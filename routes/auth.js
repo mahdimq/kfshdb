@@ -9,7 +9,7 @@ router.post('/login', async function (req, res, next) {
 	try {
 		const user = await User.authenticate(req.body);
 		const token = getToken(user);
-		return res.json({ token, id: user.id });
+		return res.json({ token, id: user.id, firstname: user.firstname, is_admin: user.is_admin });
 	} catch (err) {
 		return next(err);
 	}

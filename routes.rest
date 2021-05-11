@@ -45,18 +45,18 @@ Content-Type: application/json
 
 
 ### UPDATE USER (ADMIN PRIVELAGE REQUIRED)
-PATCH http://localhost:3001/users/1234
+PATCH http://localhost:3001/users/9999
 Content-Type: application/json
 
 {
   "password": "password",
-  "is_admin": false,
-  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY5ODA0OX0.4_gTAwv1lbKfJwGyt44CPlUiy6qJNiMlWI9Ry4dixlo"
+  "is_admin": true,
+  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiQWRtaW4iLCJsYXN0bmFtZSI6IlVzZXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjE2NjY0MjQwfQ.w_6qrKqKrBUhzs6QF7HrxWTs8o97vuzDlPO-P8FTHU4"
 }
 
 
 ### DELETE USER (EXTREME CAUTION) (isAdmin/ensureLoggedIn)
-DELETE http://localhost:3001/users/1111
+DELETE http://localhost:3001/users/7777
 Content-Type: application/json
 
 # ADMIN TOKEN

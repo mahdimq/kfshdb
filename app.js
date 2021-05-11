@@ -3,7 +3,13 @@ const express = require('express');
 const app = express();
 const ExpressError = require('./helpers/expressError');
 
+
+const cors = require("cors");
 app.use(express.json());
+app.use(cors());
+
+const morgan = require("morgan");
+app.use(morgan("tiny"));
 
 const userRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');

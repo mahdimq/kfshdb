@@ -60,9 +60,9 @@
 			"examples": ["Conner"]
 		},
 		"dob": {
-			"$id": "#/properties/dob",
+      "$id": "#/properties/dob",
 			"type": "string",
-			"format": "date",
+			"format": "dd-MMM-yyyy",
 			"title": "The dob schema",
 			"description": "An explanation about the purpose of this instance.",
 			"default": "",

@@ -38,7 +38,7 @@ class User {
 		const result = await db.query(
 			`SELECT *
       FROM users
-      ORDER BY id`
+      ORDER BY firstname`
 		);
 		
 		if (result.rows.length === 0) throw new ExpressError('Users not found', 404);
@@ -78,7 +78,7 @@ class User {
 
 	static async findOne(user_id) {
 		const userRes = await db.query(
-			`SELECT id, firstname, lastname
+			`SELECT id, firstname, lastname, is_admin
       FROM users
       WHERE id = $1`,
 			[user_id]

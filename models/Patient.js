@@ -34,16 +34,17 @@ class Patient {
 
 		const result = await db.query(
 			`INSERT INTO patients
-      (mrn, firstname, lastname, dob, gender, age_category, nationality)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      (mrn, firstname, middlename, lastname, dob, gender, age_group, nationality)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     	RETURNING *`,
 			[
 				data.mrn,
 				data.firstname,
+				data.middlename,
 				data.lastname,
 				data.dob,
 				data.gender,
-				data.age_category,
+				data.age_group,
 				data.nationality
 			]
 		);

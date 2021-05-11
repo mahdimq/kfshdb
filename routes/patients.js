@@ -6,7 +6,7 @@ const router = new express.Router();
 const Patient = require('../models/Patient');
 const { validate } = require('jsonschema');
 const { patientSchema } = require('../schemas');
-const { ensureLoggedIn, isAuthenticated } = require('../middleware/auth');
+const { isAuthenticated } = require('../middleware/auth');
 
 /** GET / => {patients: [patient, ...]} */
 
@@ -52,10 +52,11 @@ router.post('/', async (req, res, next) => {
 		return res.status(201).json({
 			mrn: newPatient.mrn,
 			firstname: newPatient.firstname,
+			middlename: newPatient.middlename,
 			lastname: newPatient.lastname,
 			dob: newPatient.dob,
 			gender: newPatient.gender,
-			age_category: newPatient.age_category,
+			age_group: newPatient.age_group,
 			nationality: newPatient.nationality
 		});
 	} catch (e) {
