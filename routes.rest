@@ -36,11 +36,11 @@ POST http://localhost:3001/users
 Content-Type: application/json
 
 {
-  "id": 3456,
+  "id": 1111,
   "password": "password",
   "firstname": "John",
   "lastname": "Conner",
-  "is_admin": false
+  "is_admin": true
 }
 
 
@@ -191,7 +191,7 @@ Content-Type: application/json
 
 ### VISIT ROUTE ###
 ### GET ALL
-GET http://localhost:3001/visits
+GET http://localhost:3001/visits/2348
 Content-Type: application/json
 
 {

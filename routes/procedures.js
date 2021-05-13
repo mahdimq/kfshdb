@@ -10,7 +10,7 @@ const {  isAuthenticated, ensureIsAdmin } = require('../middleware/auth');
 router.get('/', isAuthenticated, async (req, res, next) => {
 	try {
 		const procedures = await Procedure.findAll();
-		return res.json( procedures );
+		return res.json( {procedures} );
 	} catch (err) {
 		return next(err);
 	}

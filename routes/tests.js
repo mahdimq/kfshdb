@@ -20,7 +20,7 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
 	try {
 		const test = await Test.findOne(req.params.id);
-		return res.json({ test });
+		return res.json( test );
 	} catch (err) {
 		return next(err);
 	}

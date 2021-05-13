@@ -9,8 +9,8 @@ const Department = require('./Department');
 
 class Visit {
 	// ADD DATA TO VISIT, AUTH REQUIRED
-	static async addVisit(patient_mrn, physician_id, user_id, location_id, visit_date, status) {
-		if (!patient_mrn || !physician_id || !user_id || !visit_date)
+	static async addVisit(log_num, ped_log_num, patient_mrn, physician_id, user_id, location_id, visit_date) {
+		if (!log_num || !patient_mrn || !physician_id || !user_id || !visit_date)
 			throw new ExpressError('Visit not found', 400);
 		// Check if visit already exists
 		// const duplicateCheck = await db.query(
@@ -28,23 +28,31 @@ class Visit {
 
 		// If no duplicates found, add current visit to list
 		const result = await db.query(
-			`INSERT INTO visits (patient_mrn, physician_id, user_id, location_id, visit_date, status)
-			VALUES ($1, $2, $3, $4, $5, $6)
+			`INSERT INTO visits (log_num, ped_log_num, patient_mrn, physician_id, user_id, procedure_id, location_id, visit_date)
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 			RETURNING *`,
-			[patient_mrn, physician_id, user_id, location_id, visit_date, status]
+			[log_num, ped_log_num, patient_mrn, physician_id, user_id, procedure_id, location_id, visit_date]
 		);
 		if (!result.rows[0]) throw new ExpressError('Unable to add visit', 500);
 		return await Patient.findOne(mrn);
 	}
 
 	// GET ALL VISITS
-	static async getAll(){
+	static async getAll(mrn){
 		const result = await db.query(
-			`SELECT * FROM visits`
+			`SELECT *
+      FROM visits
+      WHERE patient_mrn = $1`,
+      [mrn]
 		);
+    const visit = result.rows;
 
-		if (result.rows.length === 0) throw new ExpressError('Visits not found', 404);
-		return result.rows;
+		if (!visit) {
+			const error = new ExpressError(`Visit does not exist`);
+			error.status = 404; // 404 NOT FOUND
+			throw error;
+		}
+    return visit;
 	}
 
 	// Get list of movies from watchlist
