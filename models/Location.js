@@ -10,7 +10,7 @@ class Location {
 		const result = await db.query(
 			`SELECT *
       FROM locations
-      ORDER BY name ASC`
+      ORDER BY location_name ASC`
 		);
 
 		return result.rows;
@@ -35,22 +35,22 @@ class Location {
 		const duplicateCheck = await db.query(
 			`SELECT *
       FROM locations
-      WHERE name = $1`,
-			[data.name]
+      WHERE location_name = $1`,
+			[data.location_name]
 		);
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Location: '${data.name}' already exists`);
+			const err = new ExpressError(`Location: '${data.location_name}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
 		const result = await db.query(
 			`INSERT INTO locations
-      (name)
+      (location_name)
       VALUES ($1)
     	RETURNING *`,
-			[data.name]
+			[data.location_name]
 		);
 
 		return result.rows[0];
@@ -62,7 +62,7 @@ class Location {
 		const result = await db.query(
 			`DELETE FROM locations
       WHERE id = $1
-      RETURNING name`,
+      RETURNING location_name`,
 			[id]
 		);
 

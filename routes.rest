@@ -4,7 +4,7 @@ POST http://localhost:3001/login
 Content-Type: application/json
 
 {
-  "id": 2345,
+  "id": 2222,
   "password": "password"
 }
 
@@ -195,5 +195,14 @@ GET http://localhost:3001/visits/2348
 Content-Type: application/json
 
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60"
+}
+
+### VISIT ROUTE ###
+### GET ALL
+GET http://localhost:3001/visitstests/21-241
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60"
 }

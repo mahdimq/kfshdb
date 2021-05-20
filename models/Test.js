@@ -17,12 +17,12 @@ class Test {
 
 	// FIND ONE TEST
 
-	static async findOne(cpt) {
+	static async findOne(id) {
 		const result = await db.query(
 			`SELECT *
       FROM tests
-      WHERE cpt = $1`,
-			[cpt]
+      WHERE id = $1`,
+			[id]
 		);
 
 		return result.rows[0];
@@ -34,22 +34,22 @@ class Test {
 		const duplicateCheck = await db.query(
 			`SELECT *
       FROM tests
-      WHERE cpt = $1`,
-			[data.cpt]
+      WHERE id = $1`,
+			[data.id]
 		);
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Test: '${data.cpt}' already exists`);
+			const err = new ExpressError(`Test: '${data.id}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
 		const result = await db.query(
 			`INSERT INTO tests
-      (cpt, description, quantity)
+      (id, cpt_id, quantity)
       VALUES ($1, $2, $3)
     	RETURNING *`,
-			[data.cpt, data.description, data.quantity]
+			[data.id, data.cpt_id, data.quantity]
 		);
 
 		return result.rows[0];
@@ -60,8 +60,7 @@ class Test {
 	static async remove(id) {
 		const result = await db.query(
 			`DELETE FROM tests
-      WHERE id = $1
-      RETURNING cpt, description`,
+      WHERE id = $1`,
 			[id]
 		);
 

@@ -3,14 +3,14 @@
 const express = require('express');
 const router = new express.Router();
 
-const Test = require('../models/Test');
+const TestCodes = require('../models/TestCodes');
 const {  isAuthenticated, ensureIsAdmin } = require('../middleware/auth');
 
 // GET ALL TESTS /tests/
 router.get('/', isAuthenticated, async (req, res, next) => {
 	try {
-		const tests = await Test.findAll();
-		return res.json({ tests });
+		const testCodes = await TestCodes.findAll();
+		return res.json({ testCodes });
 	} catch (err) {
 		return next(err);
 	}
@@ -19,8 +19,8 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 // GET A SINGLE TEST BY ID /tests/:id
 router.get('/:id', async (req, res, next) => {
 	try {
-		const test = await Test.findOne(req.params.id);
-		return res.json( test );
+		const testCode = await TestCodes.findOne(req.params.id);
+		return res.json( testCode );
 	} catch (err) {
 		return next(err);
 	}
@@ -29,11 +29,10 @@ router.get('/:id', async (req, res, next) => {
 // ADD A NEW TEST
 router.post('/', ensureIsAdmin, async (req, res, next) => {
 	try {
-		const newTest = await Test.add(req.body);
+		const newTest = await TestCodes.add(req.body);
 		return res.status(201).json({
 			cpt: newTest.cpt,
-			description: newTest.description,
-			quantity: newTest.quantity
+			description: newTest.description
 		});
 	} catch (e) {
 		return next(e);
@@ -43,8 +42,8 @@ router.post('/', ensureIsAdmin, async (req, res, next) => {
 // DELETE A SINGLE TEST tests/:id
 router.delete('/:id', ensureIsAdmin, async (req, res, next) => {
 	try {
-		await Test.remove(req.params.id);
-		return res.json({ message: `Test: ${req.params.id} has been deleted` });
+		await TestCodes.remove(req.params.id);
+		return res.json({ message: `TestCodes: ${req.params.id} has been deleted` });
 	} catch (err) {
 		return next(err);
 	}

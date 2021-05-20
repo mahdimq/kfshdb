@@ -9,7 +9,7 @@ class Department {
 		const result = await db.query(
 			`SELECT *
       FROM departments
-      ORDER BY name ASC`
+      ORDER BY department_name ASC`
 		);
 
 		return result.rows;
@@ -32,22 +32,22 @@ class Department {
 		const duplicateCheck = await db.query(
 			`SELECT *
       FROM departments
-      WHERE name = $1`,
-			[data.name]
+      WHERE department_name = $1`,
+			[data.department_name]
 		);
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Department: '${data.name}' already exists`);
+			const err = new ExpressError(`Department: '${data.department_name}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
 		const result = await db.query(
 			`INSERT INTO departments
-      (name)
+      (department_name)
       VALUES ($1)
     	RETURNING *`,
-			[data.name]
+			[data.department_name]
 		);
 
 		return result.rows[0];
@@ -59,7 +59,7 @@ class Department {
 		const result = await db.query(
 			`DELETE FROM departments
       WHERE id = $1
-      RETURNING name`,
+      RETURNING department_name`,
 			[id]
 		);
 

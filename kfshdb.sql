@@ -10,7 +10,8 @@ DROP TABLE IF EXISTS departments;
 DROP TABLE IF EXISTS locations;
 DROP TABLE IF EXISTS procedures;
 DROP TABLE IF EXISTS tests;
-DROP TABLE IF EXISTS procedures_tests;
+DROP TABLE IF EXISTS test_codes;
+DROP TABLE IF EXISTS visits_tests;
 DROP TABLE IF EXISTS visits;
 
 -- CREATE TABLE "users" (
@@ -126,31 +127,36 @@ CREATE TABLE "physicians" (
   "department_id" int
 );
 
-CREATE TABLE "procedures" (
+CREATE TABLE "visits_tests" (
   "id" SERIAL PRIMARY KEY,
-  "name" varchar
+  "visit_id" varchar,
+  "test_id" int
 );
 
-CREATE TABLE "procedures_tests" (
+CREATE TABLE "procedures" (
   "id" SERIAL PRIMARY KEY,
-  "procedure_id" int,
-  "test_cpt" varchar,
-  "quantity" int
+  "procedure_name" varchar
 );
 
 CREATE TABLE "tests" (
+  "id" SERIAL PRIMARY KEY,
+  "cpt_id" varchar,
+  "quantity" int
+);
+
+CREATE TABLE "test_codes" (
   "cpt" varchar PRIMARY KEY,
   "description" varchar
 );
 
 CREATE TABLE "locations" (
   "id" SERIAL PRIMARY KEY,
-  "name" varchar
+  "location_name" varchar
 );
 
 CREATE TABLE "departments" (
   "id" SERIAL PRIMARY KEY,
-  "name" varchar
+  "department_name" varchar
 );
 
 ALTER TABLE "visits" ADD FOREIGN KEY ("patient_mrn") REFERENCES "patients" ("mrn") ON DELETE CASCADE;
@@ -158,9 +164,10 @@ ALTER TABLE "visits" ADD FOREIGN KEY ("physician_id") REFERENCES "physicians" ("
 ALTER TABLE "physicians" ADD FOREIGN KEY ("department_id") REFERENCES "departments" ("id") ON DELETE CASCADE;
 ALTER TABLE "visits" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE;
 ALTER TABLE "visits" ADD FOREIGN KEY ("location_id") REFERENCES "locations" ("id") ON DELETE CASCADE;
-ALTER TABLE "procedures_tests" ADD FOREIGN KEY ("test_cpt") REFERENCES "tests" ("cpt") ON DELETE CASCADE;
-ALTER TABLE "procedures" ADD FOREIGN KEY ("id") REFERENCES "procedures_tests" ("procedure_id") ON DELETE CASCADE;
+ALTER TABLE "visits_tests" ADD FOREIGN KEY ("visit_id") REFERENCES "visits" ("log_num") ON DELETE CASCADE;
 ALTER TABLE "visits" ADD FOREIGN KEY ("procedure_id") REFERENCES "procedures" ("id") ON DELETE CASCADE;
+ALTER TABLE "tests" ADD FOREIGN KEY ("cpt_id") REFERENCES "test_codes" ("cpt") ON DELETE CASCADE;
+ALTER TABLE "visits_tests" ADD FOREIGN KEY ("test_id") REFERENCES "tests" ("id") ON DELETE CASCADE;
 
 -- SEED DATA FPR SCHEMA --
 
@@ -172,7 +179,7 @@ ALTER TABLE "visits" ADD FOREIGN KEY ("procedure_id") REFERENCES "procedures" ("
 -- (4567, 'Muhammad', 'Ali', 'password', false)
 -- RETURNING *;
 
-INSERT INTO departments (name)
+INSERT INTO departments (department_name)
 VALUES
 ('Adult Neurology'),
 ('Pediatric Neurology'),
@@ -194,7 +201,7 @@ VALUES
 ('Erum', 'Khalid', 4)
 RETURNING *;
 
-INSERT INTO locations (name)
+INSERT INTO locations (location_name)
 VALUES
 ('AICU'),
 ('PICU'),
@@ -205,7 +212,7 @@ VALUES
 ('B5')
 RETURNING *;
 
-INSERT INTO procedures (name)
+INSERT INTO procedures (procedure_name)
 VALUES
 ('EEG'),
 ('NCS'),
@@ -217,7 +224,7 @@ VALUES
 ('SSEP')
 RETURNING *;
 
-INSERT INTO tests (cpt, description)
+INSERT INTO test_codes (cpt, description)
 VALUES
 (91986, 'Awake & Asleep'),
 (98213, 'Long Term Monitoring'),
@@ -226,13 +233,23 @@ VALUES
 (13232, '2 Muscle EMG')
 RETURNING *;
 
-INSERT INTO procedures_tests (procedure_id, test_cpt, quantity)
+INSERT INTO tests (cpt_id, quantity)
 VALUES
-(1, 91986, 1),
-(5, 98213, 1),
-(8, 23478, 1),
-(2, 23876, 2),
-(3, 13232, 3)
+(91986, 1),
+(98213, 1),
+(23478, 2),
+(23876, 3),
+(13232, 4)
+RETURNING *;
+
+INSERT INTO visits_tests (visit_id, test_id)
+VALUES
+('21-240', 1),
+('21-237', 2),
+('21-239', 2),
+('21-240', 3),
+('21-241', 4),
+('21-235', 1)
 RETURNING *;
 
  INSERT INTO patients (mrn, firstname, middlename, lastname, gender, dob, age_group, nationality)

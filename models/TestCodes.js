@@ -2,76 +2,75 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressError');
 
-// create procedure class and related functions
-class Procedure {
-	// FIND ALL PROCEDURES
+// create test class and related functions
+class TestCodes {
+	// FIND ALL TESTS
 
 	static async findAll() {
 		const result = await db.query(
 			`SELECT *
-      FROM procedures
-      ORDER BY name ASC`
+      FROM test_codes`
 		);
 
 		return result.rows;
 	}
 
-	// FIND ONE LOCATION
+	// FIND ONE TEST
 
-	static async findOne(id) {
+	static async findOne(cpt) {
 		const result = await db.query(
 			`SELECT *
-      FROM procedures
-      WHERE id = $1`,
-			[id]
+      FROM test_codes
+      WHERE cpt = $1`,
+			[cpt]
 		);
 
 		return result.rows[0];
 	}
 
-	// ADD A NEW LOCATION
+	// ADD A NEW TEST
 
 	static async add(data) {
 		const duplicateCheck = await db.query(
 			`SELECT *
-      FROM procedures
-      WHERE procedure_name = $1`,
-			[data.name]
+      FROM test_codes
+      WHERE cpt = $1`,
+			[data.cpt]
 		);
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Location: '${data.name}' already exists`);
+			const err = new ExpressError(`Test: '${data.cpt}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
 		const result = await db.query(
-			`INSERT INTO procedures
-      (procedure_name)
-      VALUES ($1)
+			`INSERT INTO test_codes
+      (cpt, description)
+      VALUES ($1, $2)
     	RETURNING *`,
-			[data.name]
+			[data.cpt, data.description]
 		);
 
 		return result.rows[0];
 	}
 
-	// DELETE A LOCATION (ADMIN PRIVELAGE)
+	// DELETE A TEST (ADMIN PRIVELAGE)
 
 	static async remove(id) {
 		const result = await db.query(
-			`DELETE FROM procedures
+			`DELETE FROM test_codes
       WHERE id = $1
-      RETURNING procedure_name`,
+      RETURNING cpt, description`,
 			[id]
 		);
 
 		if (result.rows.length === 0) {
-			const notFound = new ExpressError(`Procedure does not exist`);
+			const notFound = new ExpressError(`Test Code does not exist`);
 			notFound.status = 404;
 			throw notFound;
 		}
 	}
 }
 
-module.exports = Procedure;
+module.exports = TestCodes;

@@ -7,6 +7,16 @@ const Visit = require('../models/Visit');
 const { isAuthenticated, ensureIsAdmin } = require('../middleware/auth');
 
 // GET ALL visits /visits/
+router.get('/', isAuthenticated, async (req, res, next) => {
+  	try {
+  		const visits = await Visit.getVisits();
+  		return res.json(visits );
+  	} catch (err) {
+  		return next(err);
+  	}
+  });
+
+// GET A ALL PATIENT VISITS BY PATIENTS' MRN /visits/:mrn
 router.get('/:mrn', isAuthenticated, async (req, res, next) => {
 	try {
 		const visits = await Visit.getAll(req.params.mrn);
@@ -16,7 +26,6 @@ router.get('/:mrn', isAuthenticated, async (req, res, next) => {
 	}
 });
 
-// GET A SINGLE VISIT BY MRN /visits/:id
 // router.get('/:mrn', isAuthenticated, async (req, res, next) => {
 // 	try {
 // 		const physician = await Visit.findOne(req.params.id);
