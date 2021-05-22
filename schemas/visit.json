@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+      {
+          "log_num": "21-234",
+          "ped_log_num": "P-21-140",
+          "patient_mrn": 234321,
+          "physician_id": 2,
+          "user_id": 3234,
+          "procedure_id": 4,
+          "location_id": 2,
+          "visit_date": "2012-04-23T18:25:43.511Z"
+      }
+  ],
+  "required": [
+      "log_num",
+      "patient_mrn",
+      "physician_id",
+      "user_id",
+      "procedure_id",
+      "location_id",
+      "visit_date"
+  ],
+  "properties": {
+      "log_num": {
+          "$id": "#/properties/log_num",
+          "type": "string",
+          "title": "The log_num schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "21-234"
+          ]
+      },
+      "ped_log_num": {
+          "$id": "#/properties/ped_log_num",
+          "type": "string",
+          "title": "The ped_log_num schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "P-21-140"
+          ]
+      },
+      "patient_mrn": {
+          "$id": "#/properties/patient_mrn",
+          "type": "integer",
+          "title": "The patient_mrn schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": 0,
+          "examples": [
+              234321
+          ]
+      },
+      "physician_id": {
+          "$id": "#/properties/physician_id",
+          "type": "integer",
+          "title": "The physician_id schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": 0,
+          "examples": [
+              2
+          ]
+      },
+      "user_id": {
+          "$id": "#/properties/user_id",
+          "type": "integer",
+          "title": "The user_id schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": 0,
+          "examples": [
+              3234
+          ]
+      },
+      "procedure_id": {
+          "$id": "#/properties/procedure_id",
+          "type": "integer",
+          "title": "The procedure_id schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": 0,
+          "examples": [
+              4
+          ]
+      },
+      "location_id": {
+          "$id": "#/properties/location_id",
+          "type": "integer",
+          "title": "The location_id schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": 0,
+          "examples": [
+              2
+          ]
+      },
+      "visit_date": {
+          "$id": "#/properties/visit_date",
+          "type": "string",
+          "title": "The visit_date schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "2012-04-23T18:25:43.511Z"
+          ]
+      }
+  },
+  "additionalProperties": true
+}

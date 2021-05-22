@@ -2,65 +2,58 @@
 
 const express = require('express');
 const router = new express.Router();
-
 const Visit = require('../models/Visit');
+const { validate } = require('jsonschema');
+const { visitSchema } = require('../schemas');
 const { isAuthenticated, ensureIsAdmin } = require('../middleware/auth');
 
 // GET ALL visits /visits/
 router.get('/', isAuthenticated, async (req, res, next) => {
-  	try {
-  		const visits = await Visit.getVisits();
-  		return res.json(visits );
-  	} catch (err) {
-  		return next(err);
-  	}
-  });
+  try {
+    const visits = await Visit.getVisits();
+    return res.json(visits);
+  } catch (err) {
+    return next(err);
+  }
+});
 
 // GET A ALL PATIENT VISITS BY PATIENTS' MRN /visits/:mrn
 router.get('/:mrn', isAuthenticated, async (req, res, next) => {
-	try {
-		const visits = await Visit.getAll(req.params.mrn);
-		return res.json( visits );
-	} catch (err) {
-		return next(err);
-	}
+  try {
+    const visits = await Visit.getAll(req.params.mrn);
+    return res.json(visits);
+  } catch (err) {
+    return next(err);
+  }
 });
 
-// router.get('/:mrn', isAuthenticated, async (req, res, next) => {
-// 	try {
-// 		const physician = await Visit.findOne(req.params.id);
-// 		return res.json({ visit });
-// 	} catch (err) {
-// 		return next(err);
-// 	}
-// });
-
-// /** POST / {patientdata}  => {token: token} */
-// // REGISTER A physician /physician/
-
-// // ADD A NEW VISIT
-// router.post('/', ensureIsAdmin, async (req, res, next) => {
-// 	try {
-// 		delete req.body._token;
-// 		// Validate schema from json schema
-// 		const validation = validate(req.body, visitschema);
-// 		if (!validation.valid) {
-// 			return next({
-// 				status: 400,
-// 				message: validation.errors.map((e) => e.stack)
-// 			});
-// 		}
-
-// 		const newPhysician = await Physician.add(req.body);
-// 		return res.status(201).json({
-// 			firstname: newPhysician.firstname,
-// 			lastname: newPhysician.lastname,
-// 			department_id: newPhysician.department_id
-// 		});
-// 	} catch (e) {
-// 		return next(e);
-// 	}
-// });
+// ADD A NEW VISIT
+router.post('/:mrn', async (req, res, next) => {
+  try {
+    delete req.body._token;
+    // Validate schema from json schema
+    const validation = validate(req.body, visitSchema);
+    if (!validation.valid) {
+    	return next({
+    		status: 400,
+    		message: validation.errors.map((e) => e.stack)
+    	});
+    }
+    const newVisit = await Visit.addVisit(req.body, req.params.mrn);
+    return res.status(201).json({
+      log_num: newVisit.log_num,
+      ped_log_num: newVisit.ped_log_num,
+      patient_mrn: req.params.mrn,
+      physician_id: newVisit.physician_id,
+      user_id: newVisit.user_id,
+      procedure_id: newVisit.procedure_id,
+      location_id: newVisit.location_id,
+      visit_date: newVisit.visit_date
+    });
+  } catch (e) {
+    return next(e);
+  }
+});
 
 // /** DELETE /[handle]  =>  {message: "Physician deleted"}  */
 // // DELETE A SINGLE VISIT visits/:name

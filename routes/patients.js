@@ -24,7 +24,6 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 // GET A SINGLE PATIENT BY MRN /patients/:mrn
 router.get('/:mrn', async function (req, res, next) {
 	try {
-		console.log(req.params.mrn);
 		const patient = await Patient.findOne(req.params.mrn);
 		return res.json({ patient });
 	} catch (err) {

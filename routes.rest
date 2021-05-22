@@ -173,7 +173,7 @@ Content-Type: application/json
   "lastname": "Conner",
   "dob": "2012-04-23",
   "gender": "male",
-  "age_category": "adult",
+  "age_group": "adult",
   "nationality": "Saudi"
 }
 
@@ -186,21 +186,27 @@ Content-Type: application/json
 }
 
 ### UPDATE A SINGLE PATIENT
-PATCH http://localhost:3001/patients/123456
+PATCH http://localhost:3001/patients/2348
 Content-Type: application/json
 
-### VISIT ROUTE ###
-### GET ALL
-GET http://localhost:3001/visits/2348
+
+### ADD VISIT
+POST http://localhost:3001/visits/32414
 Content-Type: application/json
 
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60"
+  "log_num": "21-360",
+  "ped_log_num": "",
+  "patient_mrn": 32414,
+  "physician_id": 4,
+  "user_id": 3333,
+  "procedure_id": 3,
+  "location_id": 4,
+  "visit_date": "2012-04-23"
 }
 
-### VISIT ROUTE ###
-### GET ALL
-GET http://localhost:3001/visitstests/21-241
+### GET Visit
+GET http://localhost:3001/visits
 Content-Type: application/json
 
 {

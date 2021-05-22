@@ -18,9 +18,9 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 
 /** GET /[id] => {visittest: visittest} */
 // GET A SINGLE PROCEDURE BY ID /visittest/:id
-router.get('/:id', isAuthenticated, async (req, res, next) => {
+router.get('/:log', isAuthenticated, async (req, res, next) => {
 	try {
-		const visittest = await VisitTest.findOne(req.params.id);
+		const visittest = await VisitTest.findOne(req.params.log);
 		return res.json( visittest );
 	} catch (err) {
 		return next(err);

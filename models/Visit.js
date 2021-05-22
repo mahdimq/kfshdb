@@ -9,30 +9,20 @@ const Department = require('./Department');
 
 class Visit {
   // ADD DATA TO VISIT, AUTH REQUIRED
-  static async addVisit(
-    log_num,
-    ped_log_num,
-    patient_mrn,
-    physician_id,
-    user_id,
-    location_id,
-    visit_date
-  ) {
-    if (!log_num || !patient_mrn || !physician_id || !user_id || !visit_date)
-      throw new ExpressError('Visit not found', 400);
+  static async addVisit(data) {
     // Check if visit already exists
-    // const duplicateCheck = await db.query(
-    // 	`SELECT procedureLog
-    //   FROM visits
-    //   WHERE mrn = $1 AND techId = $2`,
-    // 	[mrn, user_id]
-    // );
+    const duplicateCheck = await db.query(
+      `SELECT log_num 
+      FROM visits
+      WHERE patient_mrn = $1 AND log_num = $2`,
+      [ data.patient_mrn, data.log_num ]
+    );
 
-    // if (duplicateCheck.rows[0]) {
-    // 	const err = new ExpressError(`Visit already completed`);
-    // 	err.status = 409;
-    // 	throw err;
-    // }
+    if (duplicateCheck.rows[0]) {
+      const err = new ExpressError(`Visit already completed`);
+      err.status = 409;
+      throw err;
+    }
 
     // If no duplicates found, add current visit to list
     const result = await db.query(
@@ -40,19 +30,20 @@ class Visit {
 			VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 			RETURNING *`,
       [
-        log_num,
-        ped_log_num,
-        patient_mrn,
-        physician_id,
-        user_id,
-        procedure_id,
-        location_id,
-        visit_date
+        data.log_num,
+        data.ped_log_num,
+        data.patient_mrn,
+        data.physician_id,
+        data.user_id,
+        data.procedure_id,
+        data.location_id,
+        data.visit_date
       ]
     );
     if (!result.rows[0]) throw new ExpressError('Unable to add visit', 500);
-    return await Patient.findOne(mrn);
+    return result.rows[0];
   }
+
 
   // GET ALL VISITS
   static async getAll(mrn) {
@@ -68,7 +59,8 @@ class Visit {
       JOIN users ON visits.user_id = users.id 
       JOIN locations ON visits.location_id = locations.id
       JOIN procedures ON visits.procedure_id = procedures.id
-      WHERE visits.patient_mrn = $1`,
+      WHERE visits.patient_mrn = $1
+      ORDER BY visits.log_num ASC`,
       [ mrn ]
     );
 
@@ -95,7 +87,8 @@ class Visit {
       JOIN physicians ON visits.physician_id = physicians.id 
       JOIN users ON visits.user_id = users.id 
       JOIN locations ON visits.location_id = locations.id
-      JOIN procedures ON visits.procedure_id = procedures.id`
+      JOIN procedures ON visits.procedure_id = procedures.id
+      ORDER BY visits.log_num ASC`
     );
     if (!result) throw new ExpressError('No movies found', 400);
     return result.rows;
