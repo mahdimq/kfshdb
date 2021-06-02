@@ -15,22 +15,16 @@ const userRoutes = require('./routes/users');
 const authRoutes = require('./routes/auth');
 const patientRoutes = require('./routes/patients');
 const physicianRoutes = require('./routes/physicians');
-const departmentRoutes = require('./routes/departments');
-const locationRoutes = require('./routes/locations');
-const procedureRoutes = require('./routes/procedures');
-const testCodeRoutes = require('./routes/testCodes');
+const hospitalRoutes = require('./routes/hospital')
 const visitRoutes = require('./routes/visits');
-const visitTestRoutes = require('./routes/visitstests');
+const visitDetailRoutes = require('./routes/visitdetails');
 
 app.use('/users', userRoutes);
 app.use('/patients', patientRoutes);
 app.use('/physicians', physicianRoutes);
-app.use('/departments', departmentRoutes);
-app.use('/locations', locationRoutes);
-app.use('/procedures', procedureRoutes);
-app.use('/testCodes', testCodeRoutes);
+app.use('/hospital', hospitalRoutes);
 app.use('/visits', visitRoutes);
-app.use('/visitstests', visitTestRoutes);
+app.use('/visitdetails', visitDetailRoutes);
 app.use('/', authRoutes);
 
 // Custom 404 Page Not Found Error

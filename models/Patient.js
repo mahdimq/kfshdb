@@ -70,7 +70,35 @@ class Patient {
 			throw error;
 		}
 
-		return patient;
+    const visits = await db.query(
+      `SELECT visits.log_num, visits.ped_log_num, users.firstname AS user_firstname, users.lastname AS user_lastname, procedures.procedure_name, 
+      locations.location_name, physicians.firstname, physicians.lastname, visits.visit_date 
+      FROM visits 
+      JOIN physicians ON visits.physician_id = physicians.id 
+      JOIN users ON visits.user_id = users.id 
+      JOIN locations ON visits.location_id = locations.id
+      JOIN procedures ON visits.procedure_id = procedures.id
+      WHERE visits.patient_mrn = $1
+      ORDER BY visits.log_num ASC`,
+      [mrn]
+    )
+    patient.visits = visits.rows;
+
+    // console.log("VISIT TYPE: ", typeof(visits))
+    // for (let v of Object.values(visits)) {
+    //   const description = await db.query(
+    //     `SELECT cpt, description, log_num, ped_log_num, quantity
+    //     FROM visits_tests AS vt
+    //     JOIN visits AS v ON vt.visit_id = v.log_num
+    //     JOIN tests AS t ON vt.test_id = t.id
+    //     JOIN test_codes AS tc ON t.cpt_id = tc.cpt
+    //     WHERE v.patient_mrn = $1`,
+    //     [mrn]
+    //   )
+    //   v.visitDetails = description.rows;
+    // }
+
+    return patient;
 	}
 
 	/** Update patient data with `data`.

@@ -1,9 +1,5 @@
 const db = require('../db');
 const ExpressError = require('../helpers/expressError');
-const Patient = require('./Patient');
-const Physician = require('./Physician');
-const User = require('./User');
-const Department = require('./Department');
 
 /** Related functions for visits. */
 
@@ -46,36 +42,72 @@ class Visit {
 
 
   // GET ALL VISITS
-  static async getAll(mrn) {
+  static async getVisits(log) {
     const result = await db.query(
-      `SELECT visits.log_num, visits.ped_log_num, visits.patient_mrn, 
-      patients.firstname AS p_firstname, patients.middlename AS p_middlename, patients.lastname AS p_lastname,
+      `SELECT visits.log_num, visits.ped_log_num, patients.mrn, 
+      patients.firstname, patients.middlename, patients.lastname,
       patients.dob, patients.gender, patients.nationality, patients.age_group,
       users.firstname AS user_firstname, users.lastname AS user_lastname, procedures.procedure_name, 
-      locations.location_name, physicians.firstname, physicians.lastname, visits.visit_date 
+      locations.location_name, physicians.firstname AS p_firstname, physicians.lastname AS p_lastname, visits.visit_date 
       FROM visits 
       JOIN patients ON visits.patient_mrn = patients.mrn
       JOIN physicians ON visits.physician_id = physicians.id 
       JOIN users ON visits.user_id = users.id 
       JOIN locations ON visits.location_id = locations.id
       JOIN procedures ON visits.procedure_id = procedures.id
-      WHERE visits.patient_mrn = $1
+      WHERE visits.log_num = $1
       ORDER BY visits.log_num ASC`,
-      [ mrn ]
+      [ log ]
     );
-
-    const visit = result.rows;
+    const visit = result.rows[0];
 
     if (!visit) {
       const error = new ExpressError(`Visit does not exist`);
       error.status = 404; // 404 NOT FOUND
       throw error;
     }
+
+    const visitDetails = await db.query(
+      `SELECT cpt, description, log_num, ped_log_num, quantity
+      FROM visits_tests AS vt
+      JOIN visits AS v ON vt.visit_id = v.log_num
+      JOIN tests AS t ON vt.test_id = t.id
+      JOIN test_codes AS tc ON t.cpt_id = tc.cpt
+      WHERE vt.visit_id = $1`,
+			[log]
+    )
+
+    visit.visitDetails = visitDetails.rows
+
     return visit;
   }
 
   // Get list of all visits in the database
-  static async getVisits() {
+  // static async getAll() {
+  //   const result = await db.query(
+  //     `SELECT visits.log_num, visits.ped_log_num, visits.patient_mrn, 
+  //     patients.firstname AS p_firstname, patients.middlename AS p_middlename, patients.lastname AS p_lastname,
+  //     patients.dob, patients.gender, patients.nationality, patients.age_group,
+  //     users.firstname AS user_firstname, users.lastname AS user_lastname, procedures.procedure_name, 
+  //     locations.location_name, physicians.firstname, physicians.lastname, visits.visit_date 
+  //     FROM visits 
+  //     JOIN patients ON visits.patient_mrn = patients.mrn
+  //     JOIN physicians ON visits.physician_id = physicians.id 
+  //     JOIN users ON visits.user_id = users.id 
+  //     JOIN locations ON visits.location_id = locations.id
+  //     JOIN procedures ON visits.procedure_id = procedures.id
+  //     WHERE 
+  //     ORDER BY visits.log_num ASC`
+  //   );
+
+  //   if (!result) throw new ExpressError('No movies found', 400);
+
+  //   const results = result.rows;
+  //   return results;
+  // }
+
+  // Get list of all visits in the database
+  static async getAll() {
     const result = await db.query(
       `SELECT visits.log_num, visits.ped_log_num, visits.patient_mrn, 
       patients.firstname AS p_firstname, patients.middlename AS p_middlename, patients.lastname AS p_lastname,
@@ -90,8 +122,11 @@ class Visit {
       JOIN procedures ON visits.procedure_id = procedures.id
       ORDER BY visits.log_num ASC`
     );
-    if (!result) throw new ExpressError('No movies found', 400);
-    return result.rows;
+
+    if (!result) throw new ExpressError('No Visits found', 400);
+
+    const results = result.rows;
+    return results;
   }
 
   // 	// Remove movie from watchlist. Auth required.

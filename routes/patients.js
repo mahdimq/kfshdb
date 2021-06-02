@@ -25,7 +25,7 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 router.get('/:mrn', async function (req, res, next) {
 	try {
 		const patient = await Patient.findOne(req.params.mrn);
-		return res.json({ patient });
+		return res.json( patient);
 	} catch (err) {
 		return next(err);
 	}

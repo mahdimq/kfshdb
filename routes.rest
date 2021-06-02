@@ -4,7 +4,7 @@ POST http://localhost:3001/login
 Content-Type: application/json
 
 {
-  "id": 2222,
+  "id": 3914,
   "password": "password"
 }
 
@@ -99,54 +99,42 @@ Content-Type: application/json
 }
 
 ### DEPARTMENT/LOCATION/PROCEDURE/TESTS ROUTES ###
-GET http://localhost:3001/tests
+GET http://localhost:3001/hospital/departments
 Content-Type: application/json
-
-
-# ADMIN TOKEN
-# {
-#   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
-#  }
 
 # USER TOKEN
 {
   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY5ODA0OX0.4_gTAwv1lbKfJwGyt44CPlUiy6qJNiMlWI9Ry4dixlo"
 }
 
-### GET SINGLE 
-GET http://localhost:3001/departments/1
+### ADD HOSPITAL DATA 
+POST http://localhost:3001/hospital/procedures
 Content-Type: application/json
 
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiSm9obiIsImxhc3RuYW1lIjoiQ29ubmVyIiwiaXNfYWRtaW4iOnRydWUsImlhdCI6MTYyMjU3MTQyMX0.2Vkf-5t3D0Gp2AlSpUs1eK0okERWuJATvLOtf0GlGr0",
+  "procedure_name": "SFEMG"
 }
 
-### ADD SINGLE
-POST http://localhost:3001/tests
+### DELETE HOSPITAL DATA 
+DELETE http://localhost:3001/hospital/testcodes/
 Content-Type: application/json
 
 # ADMIN TOKEN
 {
-  "cpt": 23396,
-  "description": "Upper & Lower MEP",
-  "quantity": 2,
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
- }
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiSm9obiIsImxhc3RuYW1lIjoiQ29ubmVyIiwiaXNfYWRtaW4iOnRydWUsImlhdCI6MTYyMjU3MTQyMX0.2Vkf-5t3D0Gp2AlSpUs1eK0okERWuJATvLOtf0GlGr0"
+}
 
-### REMOVE SINGLE
-DELETE http://localhost:3001/locations/11
-Content-Type: application/json
-
-# ADMIN TOKEN
-{
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
- }
+# USER TOKEN
+# {
+#   "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzkxNCwiZmlyc3RuYW1lIjoiRGVuemlsIiwibGFzdG5hbWUiOiJUYXVybyIsImlzX2FkbWluIjpmYWxzZSwiaWF0IjoxNjIyNTcyMTM5fQ.GnHJcOF7rrY7BegSzEXKeCKc01B1t7yx9M6k_j8dw88"
+# }
 
 
 
 ### PATIENT ROUTES ###
 ### FIND ALL PATIENTS
-GET http://localhost:3001/patients
+GET http://localhost:3001/patients/2348
 Content-Type: application/json
 
 {
@@ -191,24 +179,20 @@ Content-Type: application/json
 
 
 ### ADD VISIT
-POST http://localhost:3001/visits/32414
+POST http://localhost:3001/visitdetails/21-234
 Content-Type: application/json
 
 {
-  "log_num": "21-360",
-  "ped_log_num": "",
-  "patient_mrn": 32414,
-  "physician_id": 4,
-  "user_id": 3333,
-  "procedure_id": 3,
-  "location_id": 4,
-  "visit_date": "2012-04-23"
+  "visit_id": "21-234",
+  "test_id": 3,
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60"
 }
 
 ### GET Visit
-GET http://localhost:3001/visits
+GET http://localhost:3001/visits/21-413
 Content-Type: application/json
 
 {
   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60"
+  
 }
