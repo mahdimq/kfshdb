@@ -28,7 +28,7 @@ router.get('/:log', isAuthenticated, async (req, res, next) => {
 });
 
 // ADD A NEW VISIT
-router.post('/:mrn', async (req, res, next) => {
+router.post('/:mrn', isAuthenticated, async (req, res, next) => {
   try {
     delete req.body._token;
     // Validate schema from json schema

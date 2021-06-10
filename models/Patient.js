@@ -4,71 +4,64 @@ const ExpressError = require('../helpers/expressError');
 
 // create patient class and related functions
 class Patient {
-	// FIND ALL PATIENTS
+  // FIND ALL PATIENTS
+  static async findAll() {
+    const result = await db.query(`SELECT * FROM patients ORDER BY mrn`);
+    // if patients not found, throw error
+    if (!result) throw new ExpressError('No Patients found in DB', 404);
 
-	static async findAll() {
-		const result = await db.query(
-			`SELECT *
-      FROM patients
-      ORDER BY mrn`
-		);
+    return result.rows;
+  }
 
-		return result.rows;
-	}
+  // ADD A NEW PATIENT
 
-	// ADD A NEW PATIENT
+  static async register(
+    mrn = null,
+    firstname = null,
+    middlename = null,
+    lastname = null,
+    dob = null,
+    gender = null,
+    age_group = null,
+    nationality = null
+  ) {
+    // Check if patient already exists in the database
+    const duplicateCheck = await db.query(`SELECT mrn FROM patients WHERE mrn = $1`, [mrn]);
 
-	static async register(data) {
-		const duplicateCheck = await db.query(
-			`SELECT mrn
-      FROM patients
-      WHERE mrn = $1`,
-			[data.mrn]
-		);
+    if (duplicateCheck.rows[0]) {
+      const err = new ExpressError(`Patient with the MRN: '${mrn}' already exists`);
+      err.status = 409;
+      throw err;
+    }
 
-		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Patient with the MRN: '${data.mrn}' already exists`);
-			err.status = 409;
-			throw err;
-		}
-
-		const result = await db.query(
-			`INSERT INTO patients
+    const result = await db.query(
+      `INSERT INTO patients
       (mrn, firstname, middlename, lastname, dob, gender, age_group, nationality)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
     	RETURNING *`,
-			[
-				data.mrn,
-				data.firstname,
-				data.middlename,
-				data.lastname,
-				data.dob,
-				data.gender,
-				data.age_group,
-				data.nationality
-			]
-		);
+      [ mrn, firstname, middlename, lastname, dob, gender, age_group, nationality ]
+    );
 
-		return result.rows[0];
-	}
+    return result.rows[0];
+  }
 
-	// RETURN PATIENT INFO FROM MRN
+  // RETURN PATIENT INFO FROM MRN
 
-	static async findOne(mrn) {
-		const patientRes = await db.query(
-			`SELECT *
+  static async findOne(mrn) {
+    const patientRes = await db.query(
+      `SELECT *
       FROM patients
       WHERE mrn = $1`,
-			[mrn]
-		);
+      [ mrn ]
+    );
 
-		const patient = patientRes.rows[0];
+    const patient = patientRes.rows[0];
 
-		if (!patient) {
-			const error = new ExpressError(`Patient with MRN: '${mrn}' does not exist`);
-			error.status = 404; // 404 NOT FOUND
-			throw error;
-		}
+    if (!patient) {
+      const error = new ExpressError(`Patient with MRN: '${mrn}' does not exist`);
+      error.status = 404; // 404 NOT FOUND
+      throw error;
+    }
 
     const visits = await db.query(
       `SELECT visits.log_num, visits.ped_log_num, users.firstname AS user_firstname, users.lastname AS user_lastname, procedures.procedure_name, 
@@ -80,11 +73,10 @@ class Patient {
       JOIN procedures ON visits.procedure_id = procedures.id
       WHERE visits.patient_mrn = $1
       ORDER BY visits.log_num ASC`,
-      [mrn]
-    )
+      [ mrn ]
+    );
     patient.visits = visits.rows;
 
-    // console.log("VISIT TYPE: ", typeof(visits))
     // for (let v of Object.values(visits)) {
     //   const description = await db.query(
     //     `SELECT cpt, description, log_num, ped_log_num, quantity
@@ -99,9 +91,9 @@ class Patient {
     // }
 
     return patient;
-	}
+  }
 
-	/** Update patient data with `data`.
+  /** Update patient data with `data`.
 	 *
 	 * This is a "partial update" --- it's fine if data doesn't contain
 	 * all the fields; this only changes provided ones.
@@ -109,39 +101,39 @@ class Patient {
 	 * Return data for changed patient.
 	 */
 
-	// UPDATE PATIENT
-	static async update(mrn, data) {
-		let { query, values } = partialUpdate('patients', data, 'mrn', mrn);
+  // UPDATE PATIENT
+  static async update(mrn, data) {
+    let { query, values } = partialUpdate('patients', data, 'mrn', mrn);
 
-		const result = await db.query(query, values);
-		const patient = result.rows[0];
+    const result = await db.query(query, values);
+    const patient = result.rows[0];
 
-		if (!patient) {
-			let notFound = new ExpressError(`Patient with mrn: '${mrn}' does not exist`);
-			notFound.status = 404;
-			throw notFound;
-		}
-		return result.rows[0];
-	}
+    if (!patient) {
+      let notFound = new ExpressError(`Patient with mrn: '${mrn}' does not exist`);
+      notFound.status = 404;
+      throw notFound;
+    }
+    return result.rows[0];
+  }
 
-	/** Delete given patient from database; returns undefined.
+  /** Delete given patient from database; returns undefined.
 	 * NEEDS EXTREME AUTHENTICATION AND ADMIN RIGHTS
 	 */
 
-	static async remove(mrn) {
-		const result = await db.query(
-			`DELETE FROM patients
+  static async remove(mrn) {
+    const result = await db.query(
+      `DELETE FROM patients
       WHERE mrn = $1
       RETURNING mrn`,
-			[mrn]
-		);
+      [ mrn ]
+    );
 
-		if (result.rows.length === 0) {
-			const notFound = new ExpressError(`Patient with ID: '${mrn}' does not exist`);
-			notFound.status = 404;
-			throw notFound;
-		}
-	}
+    if (result.rows.length === 0) {
+      const notFound = new ExpressError(`Patient with ID: '${mrn}' does not exist`);
+      notFound.status = 404;
+      throw notFound;
+    }
+  }
 }
 
 module.exports = Patient;

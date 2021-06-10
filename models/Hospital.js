@@ -19,7 +19,7 @@ class Hospital {
   static async getTestCodes() {
     const result = await db.query(
       `SELECT *
-      FROM test_codes
+      FROM tests
       ORDER BY cpt ASC`
     );
 
@@ -77,7 +77,7 @@ class Hospital {
   static async addTestCode(data) {
     const duplicateCheck = await db.query(
       `SELECT *
-      FROM test_codes
+      FROM tests
       WHERE cpt = $1`,
       [ data.cpt ]
     );
@@ -89,7 +89,7 @@ class Hospital {
     }
 
     const result = await db.query(
-      `INSERT INTO test_codes
+      `INSERT INTO tests
       (cpt, description)
       VALUES ($1, $2)
     	RETURNING *`,
@@ -169,7 +169,7 @@ class Hospital {
   // DELETE A TEST CODE (ADMIN PRIVELAGE)
   static async deleteTestCode(cpt) {
     const result = await db.query(
-      `DELETE FROM test_codes
+      `DELETE FROM tests
       WHERE cpt = $1`,
       [ cpt ]
     );

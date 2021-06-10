@@ -8,8 +8,9 @@ class Physician {
 
 	static async findAll() {
 		const result = await db.query(
-			`SELECT *
+			`SELECT physicians.id, firstname, lastname, department_name AS d_name
       FROM physicians
+      JOIN departments AS d ON physicians.department_id = d.id
       ORDER BY firstname ASC`
 		);
 

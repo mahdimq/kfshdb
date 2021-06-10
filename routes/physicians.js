@@ -12,7 +12,7 @@ const { isAuthenticated, ensureIsAdmin } = require('../middleware/auth');
 router.get('/', isAuthenticated, async (req, res, next) => {
 	try {
 		const physicians = await Physician.findAll();
-		return res.json({ physicians });
+		return res.json(physicians);
 	} catch (err) {
 		return next(err);
 	}

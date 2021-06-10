@@ -4,159 +4,158 @@ const ExpressError = require('../helpers/expressError');
 /** Related functions for Report Queries. */
 
 class Query {
-
-  /** Find all companies (can filter on terms in data). */
-// WHERE p.age_group = 'adult'
-// WHERE p.age_group = 'pediatric' AND v.visit_date >= '04-01-2021'
+// WHERE patients.age_group = 'adult'
+// WHERE patients.age_group = 'pediatric' AND v.visit_date >= '04-01-2021'
   static async monthly(data) {
-    // let baseQuery = `SELECT handle, name, description, logo_url FROM companies`;
-    let baseQuery = `SELECT procedures.procedure_name,  COUNT(*) 
-    FROM procedures 
-    JOIN visits AS v ON procedures.id = v.procedure_id 
-    JOIN  patients as p ON v.patient_mrn = p.mrn 
-    
-    GROUP BY procedures.procedure_name;`;
-    let whereExpressions = [];
-    let queryValues = [];
+    // let baseQuery = `SELECT procedures.procedure_name, COUNT(*) 
+    // FROM procedures 
+    // JOIN visits ON procedures.id = visits.procedure_id 
+    // JOIN patients ON visits.patient_mrn = patients.mrn`
+    // // [data.age_group, data.start_date, data.end_date];
+    // let whereExpressions = [];
+    // let queryValues = [];
 
-    if (data.p.age_group === "") {
-      throw new Error("Please select and Age Group");
-    }
+    // if (!data.age_group) {
+    //   throw new Error("Please select and Age Group");
+    // }
 
-    // For each possible search term, add to whereExpressions and
-    // queryValues so we can generate the right SQL
+    // // For each possible search term, add to whereExpressions and
+    // // queryValues so we can generate the right SQL
 
-    if (data.p.age_group === "adult") {
-      queryValues.push('adult');
-      whereExpressions.push(`v.visit_date <= ${v.visite_date}`, `v.visit_date >= ${v.visit_date}`);
-    }
+    // if (data.age_group) {
+    //   queryValues.push(data.age_group);
+    //   whereExpressions.push(`patients.age_group = '${data.age_group}'`);
+    // }
 
-    if (data.max_employees) {
-      queryValues.push(+data.max_employees);
-      whereExpressions.push(`num_employees <= $${queryValues.length}`);
-    }
+    // if (data.start_date) {
+    //   queryValues.push(data.start_date);
+    //   whereExpressions.push(`visits.visit_date >= '${data.start_date}'`);
+    // }
 
-    if (data.search) {
-      queryValues.push(`%${data.search}%`);
-      whereExpressions.push(`name ILIKE $${queryValues.length}`);
-    }
+    // if (data.end_date) {
+    //   queryValues.push(data.end_date);
+    //   whereExpressions.push(`visits.visit_date <= '${data.end_date}'`);
+    // }
 
-    if (whereExpressions.length > 0) {
-      baseQuery += " WHERE ";
-    }
+    // if (whereExpressions.length > 0) {
+    //   baseQuery += " WHERE";
+    // }
 
-    // Finalize query and return results
+    // // Finalize query and return results
 
-    let finalQuery = baseQuery + whereExpressions.join(" AND ") + " ORDER BY name";
-    const companiesRes = await db.query(finalQuery, queryValues);
-    return companiesRes.rows;
+    // const finalQuery = `${baseQuery} ${whereExpressions.join(" AND ")} GROUP BY procedures.procedure_name`;
+    // console.log("#########################")
+    // console.log("#########################")
+    // console.log("FINAL QUERY: ", finalQuery)
+    // console.log("#########################")
+    // console.log("#########################")
+
+    // const report = await db.query(finalQuery, queryValues);
+    const report = await db.query(
+      `SELECT p.procedure_name AS procedure, COUNT(*), patients.age_group 
+      FROM procedures AS p 
+      JOIN visits ON p.id = visits.procedure_id 
+      JOIN patients ON visits.patient_mrn = patients.mrn 
+      WHERE patients.age_group = $1
+      AND visits.visit_date >= $2 
+      AND visits.visit_date <= $3 
+      GROUP BY p.procedure_name, patients.age_group`,
+      [data.age_group, data.start_date, data.end_date]
+    )
+    return report.rows;
   }
 
-  /** Given a company handle, return data about company. */
-
-  static async findOne(handle) {
-    const companyRes = await db.query(
-        `SELECT handle, name, num_employees, description, logo_url
-            FROM companies
-            WHERE handle = $1`,
-        [handle]);
-
-    const company = companyRes.rows[0];
-
-    if (!company) {
-      const error = new Error(`There exists no company '${handle}'`);
-      error.status = 404;   // 404 NOT FOUND
-      throw error;
-    }
-
-    const jobsRes = await db.query(
-        `SELECT id, title, salary, equity
-            FROM jobs 
-            WHERE company_handle = $1`,
-        [handle]);
-
-    company.jobs = jobsRes.rows;
-
-    return company;
+  // GET DEPARTMENT DATA BY DATE
+  static async byDepartment(data) {
+    const report = await db.query(
+      `SELECT p.procedure_name AS procedure, COUNT(p.id)
+      FROM visits AS v
+      JOIN procedures AS p ON v.procedure_id = p.id
+      WHERE v.visit_date >= $1
+      AND v.visit_date <= $2
+      GROUP BY procedure
+      ORDER BY procedure`,
+      [data.start_date, data.end_date]
+    )
+    return report.rows;
   }
 
-  /** Create a company (from data), update db, return new company data. */
 
-  static async create(data) {
-    const duplicateCheck = await db.query(
-        `SELECT handle 
-            FROM companies 
-            WHERE handle = $1`,
-        [data.handle]);
-
-    if (duplicateCheck.rows[0]) {
-      let duplicateError = new Error(
-          `There already exists a company with handle '${data.handle}`);
-      duplicateError.status = 409; // 409 Conflict
-      throw duplicateError
-    }
-
-    const result = await db.query(
-        `INSERT INTO companies 
-              (handle, name, num_employees, description, logo_url)
-            VALUES ($1, $2, $3, $4, $5) 
-            RETURNING handle, name, num_employees, description, logo_url`,
-        [
-          data.handle,
-          data.name,
-          data.num_employees,
-          data.description,
-          data.logo_url
-        ]);
-
-    return result.rows[0];
+  // GET DEPARTMENT DATA BY DATE AND USER
+  static async byUser({start_date, end_date, user_id}) {
+    const report = await db.query(
+      `SELECT p.procedure_name AS procedure, CONCAT(u.firstname, ' ', u.lastname) AS technologist, COUNT(p.id) 
+      FROM visits AS v
+      JOIN procedures AS p ON v.procedure_id = p.id
+      JOIN users AS u ON v.user_id = u.id
+      WHERE v.visit_date >= $1
+      AND v.visit_date <= $2
+      AND u.id = $3
+      GROUP BY u.firstname, u.lastname, procedure
+      ORDER BY procedure`,
+      [start_date, end_date, user_id]
+    )
+    return report.rows;
   }
 
-  /** Update company data with `data`.
-   *
-   * This is a "partial update" --- it's fine if data doesn't contain
-   * all the fields; this only changes provided ones.
-   *
-   * Return data for changed company.
-   *
-   */
-
-  static async update(handle, data) {
-    let {query, values} = sqlForPartialUpdate(
-        "companies",
-        data,
-        "handle",
-        handle
-    );
-
-    const result = await db.query(query, values);
-    const company = result.rows[0];
-
-    if (!company) {
-      let notFound = new Error(`There exists no company '${handle}`);
-      notFound.status = 404;
-      throw notFound;
-    }
-
-    return company;
+  // GET PROCEDURE DATA BY PHYSICIAN
+  static async byPhysician(data) {
+    const report = await db.query(
+      `SELECT p.procedure_name AS procedure, d.department_name AS department, CONCAT(ph.firstname, ' ', ph.lastname) AS physician, COUNT(p.id)
+      FROM visits AS v 
+      JOIN physicians AS ph ON v.physician_id = ph.id
+      JOIN departments AS d ON ph.department_id = d.id
+      JOIN procedures AS p ON v.procedure_id = p.id
+      WHERE ph.id = $1
+      AND v.visit_date >= $2
+      AND v.visit_date <= $3
+      GROUP BY physician, department, procedure
+      ORDER BY department`,
+      [data.physician_id, data.start_date, data.end_date]
+    )
+    return report.rows;
   }
 
-  /** Delete given company from database; returns undefined. */
-
-  static async remove(handle) {
-    const result = await db.query(
-        `DELETE FROM companies 
-          WHERE handle = $1 
-          RETURNING handle`,
-        [handle]);
-
-    if (result.rows.length === 0) {
-      let notFound = new Error(`There exists no company '${handle}`);
-      notFound.status = 404;
-      throw notFound;
-    }
+  // GET PROCEDURE DATA BY PHYSICIAN DEPARTMENT
+  static async byPhysicianDept(data) {
+    const report = await db.query(
+      `SELECT p.procedure_name AS procedure, d.department_name AS department, CONCAT(ph.firstname, ' ', ph.lastname) AS physician, COUNT(p.id)
+      FROM visits AS v 
+      JOIN physicians AS ph ON v.physician_id = ph.id
+      JOIN departments AS d ON ph.department_id = d.id
+      JOIN procedures AS p ON v.procedure_id = p.id
+      AND v.visit_date >= $1
+      AND v.visit_date <= $2
+      GROUP BY physician, department, procedure
+      ORDER BY department`,
+      [data.start_date, data.end_date]
+    )
+    return report.rows;
   }
 }
 
 
 module.exports = Query;
+
+
+      // SELECT p.procedure_name AS procedure, ph.firstname, ph.lastname, d.department_name AS department, COUNT(p.id) 
+      // FROM visits AS v
+      // JOIN procedures AS p ON v.procedure_id = p.id
+      // JOIN physicians AS ph ON v.user_id = ph.id
+      // JOIN departments AS d ON ph.department_id = d.id
+      // WHERE v.visit_date >= '03-01-2021'
+      // AND v.visit_date <= '05-31-2021'
+      // AND ph.id = 3
+      // GROUP BY ph.firstname, ph.lastname, department, procedure
+      // ORDER BY department
+
+      // SELECT p.procedure_name AS procedure, d.department_name AS department, ph.firstname, ph.lastname, COUNT(p.id)
+      // FROM visits AS v 
+      // JOIN physicians AS ph ON v.physician_id = ph.id
+      // JOIN departments AS d ON ph.department_id = d.id
+      // JOIN procedures AS p ON v.procedure_id = p.id
+      // WHERE ph.id = 1
+      // AND v.visit_date >= '05-01-2021'
+      // AND v.visit_date <= '05-31-2021'
+      // GROUP BY department, ph.firstname, ph.lastname, procedure
+      // ORDER BY department

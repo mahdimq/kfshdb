@@ -13,7 +13,7 @@ GET http://localhost:3001/users
 Content-Type: application/json
 
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjM0NSwiZmlyc3RuYW1lIjoiQ2xhcmsiLCJsYXN0bmFtZSI6IktlbnQiLCJpc19hZG1pbiI6ZmFsc2UsImlhdCI6MTYxNjY2NDYxNH0.CLD_rFCFQYKQto5v12Tj0yIOnuyttj8QeEormGypVaY"
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiSm9obiIsImxhc3RuYW1lIjoiQ29ubmVyIiwiaXNfYWRtaW4iOnRydWUsImlhdCI6MTYyMzA1NDc5OX0.BssVd-wWUyfinoQ2m34_sLADCBLjEYRiZ8Wql4QMsEA"
 }
 
 ### GET SINGLE USER (ensureLoggedIn/admin)
@@ -22,7 +22,7 @@ Content-Type: application/json
 
 # ADMIN TOKEN
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MzQ1NiwiZmlyc3RuYW1lIjoiTXVoYW1tYWQiLCJsYXN0bmFtZSI6IkFsaSIsImlzX2FkbWluIjp0cnVlLCJpYXQiOjE2MTY2NjQ1NjZ9.iwdY3E1pdoGL4qm9hnJoeKjNKJyUXF6VqV9AkaVC-Kk"
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTExMSwiZmlyc3RuYW1lIjoiSm9obiIsImxhc3RuYW1lIjoiQ29ubmVyIiwiaXNfYWRtaW4iOnRydWUsImlhdCI6MTYyMzA1NDc5OX0.BssVd-wWUyfinoQ2m34_sLADCBLjEYRiZ8Wql4QMsEA"
  }
 
 # # USER TOKEN
@@ -35,11 +35,43 @@ Content-Type: application/json
 POST http://localhost:3001/users
 Content-Type: application/json
 
+# {
+#   "id": 1111,
+#   "password": "password",
+#   "firstname": "John",
+#   "lastname": "Conner",
+#   "is_admin": true
+# }
+
+# {
+#   "id": 2222,
+#   "password": "password",
+#   "firstname": "Clark",
+#   "lastname": "Kent",
+#   "is_admin": false
+# }
+
+# {
+#   "id": 3333,
+#   "password": "password",
+#   "firstname": "Bruce",
+#   "lastname": "Wayne",
+#   "is_admin": false
+# }
+
+# {
+#   "id": 4444,
+#   "password": "password",
+#   "firstname": "Peter",
+#   "lastname": "Parker",
+#   "is_admin": false
+# }
+
 {
-  "id": 1111,
+  "id": 5555,
   "password": "password",
-  "firstname": "John",
-  "lastname": "Conner",
+  "firstname": "Muhammad",
+  "lastname": "Ali",
   "is_admin": true
 }
 
@@ -99,7 +131,7 @@ Content-Type: application/json
 }
 
 ### DEPARTMENT/LOCATION/PROCEDURE/TESTS ROUTES ###
-GET http://localhost:3001/hospital/departments
+GET http://localhost:3001/hospital/procedures
 Content-Type: application/json
 
 # USER TOKEN
@@ -156,13 +188,15 @@ Content-Type: application/json
 # }
 
 {
-  "mrn": 123456,
+  "_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY",
+  "mrn": 887766,
   "firstname": "John",
+  "middlename": "Andrew",
   "lastname": "Conner",
-  "dob": "2012-04-23",
+  "dob": "1989-04-23",
   "gender": "male",
   "age_group": "adult",
-  "nationality": "Saudi"
+  "nationality": "non-saudi"
 }
 
 ### FIND PATIENT BY MRN
@@ -173,26 +207,63 @@ Content-Type: application/json
   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
 }
 
+### FIND VISIT DERAILS BY LOG
+GET http://localhost:3001/visits/21-241
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Njc4OSwiZmlyc3RuYW1lIjoiUGV0ZXIiLCJsYXN0bmFtZSI6IlBhcmtlciIsImlhdCI6MTYxNTI3NTYyMn0.DPsqDbgtNhDKqarnRQe8VPq_1uUi0xsdiODGch2wUvY"
+}
+
 ### UPDATE A SINGLE PATIENT
-PATCH http://localhost:3001/patients/2348
+PATCH http://localhost:3001/visits/21-324
 Content-Type: application/json
 
 
 ### ADD VISIT
-POST http://localhost:3001/visitdetails/21-234
+POST http://localhost:3001/visits/1
 Content-Type: application/json
 
 {
-  "visit_id": "21-234",
-  "test_id": 3,
+  "log_num": "21-776",
+  "ped_log_num": "P-21-623",
+  "patient_mrn": 1,
+  "procedure_id": 3,
+  "physician_id": 5,
+  "user_id": 1111,
+  "visit_date": "2021-04-23",
+  "location_id": 1,
   "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60"
 }
 
-### GET Visit
-GET http://localhost:3001/visits/21-413
+### POST Visit
+POST http://localhost:3001/visitdetails/21-237
 Content-Type: application/json
 
 {
-  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60"
-  
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60",
+  "visit_id": "21-237",
+  "quantity": 1,
+  "test_id": 91986
+}
+
+### GET QUERIES
+GET http://localhost:3001/queries/physician
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60",
+  "physician_id": 1,
+  "start_date": "01-01-2020",
+  "end_date": "05-31-2021"
+}
+
+###
+GET http://localhost:3001/queries/department
+Content-Type: application/json
+
+{
+  "_token":  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjIyMiwiZmlyc3RuYW1lIjoiQmlsYWwiLCJsYXN0bmFtZSI6IkFiZHVsUWFkaXIiLCJpc19hZG1pbiI6dHJ1ZSwiaWF0IjoxNjIwOTg3ODY2fQ.fQtueCNt6Otq9H7117uC5sRM0MWAFUS8s66lXmyrH60",
+  "start_date": "01-01-2020",
+  "end_date": "07-31-2021"
 }

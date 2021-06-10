@@ -36,6 +36,7 @@ class Visit {
         data.visit_date
       ]
     );
+    
     if (!result.rows[0]) throw new ExpressError('Unable to add visit', 500);
     return result.rows[0];
   }
@@ -71,8 +72,7 @@ class Visit {
       `SELECT cpt, description, log_num, ped_log_num, quantity
       FROM visits_tests AS vt
       JOIN visits AS v ON vt.visit_id = v.log_num
-      JOIN tests AS t ON vt.test_id = t.id
-      JOIN test_codes AS tc ON t.cpt_id = tc.cpt
+      JOIN tests AS t ON vt.test_id = t.cpt
       WHERE vt.visit_id = $1`,
 			[log]
     )

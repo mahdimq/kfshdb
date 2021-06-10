@@ -54,28 +54,44 @@ class VisitDetail {
 
 	// ADD A NEW VISIT TEST
 
-	static async add(data) {
+	static async add({test_id, visit_id, quantity}) {
 		const duplicateCheck = await db.query(
 			`SELECT *
       FROM visits_tests
       WHERE visit_id = $1 AND test_id = $2`,
-			[data.visit_id, data.test_id]
+			[visit_id, test_id]
 		);
+//     console.log('##########################')
+// console.log('##########################')
+// console.log('##########################')
+// console.log("DUPLICATE ROWS: ", duplicateCheck.rows[0].id)
+// console.log("DATA: ", data)
+// console.log('##########################')
+// console.log('##########################')
+// console.log('##########################')
 
 		if (duplicateCheck.rows[0]) {
-			const err = new ExpressError(`Tests with log num: '${data.visit_id}' already exists`);
+			const err = new ExpressError(`Procedure with log num: '${visit_id}' already exists`);
 			err.status = 409;
 			throw err;
 		}
 
-		const result = await db.query(
-			`INSERT INTO visits_tests
-      (visit_id, test_id)
-      VALUES ($1, $2)
-    	RETURNING *`,
-			[data.visit_id, data.test_id]
-		);
+    const result = await db.query(
+      `INSERT INTO visits_tests (visit_id, test_id, quantity)
+      VALUES ($1, $2, $3)
+      RETURNING *`,
+      [visit_id, test_id, quantity]
+    )
 
+		// const result = await db.query(
+		// 	`INSERT INTO visits_tests
+    //   (visit_id, test_id)
+    //   VALUES ($1, $2)
+    // 	RETURNING *`,
+		// 	[data.visit_id, data.test_id]
+		// );
+
+		// return res.rows[0];
 		return result.rows[0];
 	}
 

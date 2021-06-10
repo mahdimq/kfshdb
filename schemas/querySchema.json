@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "http://example.com/example.json",
+  "type": "object",
+  "title": "The root schema",
+  "description": "The root schema comprises the entire JSON document.",
+  "default": {},
+  "examples": [
+      {
+          "start_date": "05-03-2020",
+          "end_date": "05-20-2021",
+          "age_group": "adult",
+          "physician_id": 2
+      }
+  ],
+  "required": [
+      "start_date",
+      "end_date",
+      "age_group",
+      "physician_id"
+  ],
+  "properties": {
+      "start_date": {
+          "$id": "#/properties/start_date",
+          "type": "string",
+          "title": "The start_date schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "05-03-2020"
+          ]
+      },
+      "end_date": {
+          "$id": "#/properties/end_date",
+          "type": "string",
+          "title": "The end_date schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "05-20-2021"
+          ]
+      },
+      "age_group": {
+          "$id": "#/properties/age_group",
+          "type": "string",
+          "title": "The age_group schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": "",
+          "examples": [
+              "adult"
+          ]
+      },
+      "physician_id": {
+          "$id": "#/properties/physician_id",
+          "type": "integer",
+          "title": "The physician_id schema",
+          "description": "An explanation about the purpose of this instance.",
+          "default": 0,
+          "examples": [
+              2
+          ]
+      }
+  },
+  "additionalProperties": true
+}

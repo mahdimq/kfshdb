@@ -1,66 +1,100 @@
 /** Routes for patients. */
 
 const express = require('express');
-const router = new express.Router();
+// const router = new express.Router();
 
 const Patient = require('../models/Patient');
 const { validate } = require('jsonschema');
 const { patientSchema } = require('../schemas');
 const { isAuthenticated } = require('../middleware/auth');
 
+const router = express.Router({ mergeParams: true });
+
 /** GET / => {patients: [patient, ...]} */
 
 // GET ALL PATIENTS /patients/
 router.get('/', isAuthenticated, async (req, res, next) => {
-	try {
-		const patients = await Patient.findAll();
-		return res.json({ patients });
-	} catch (err) {
-		return next(err);
-	}
+  try {
+    const patients = await Patient.findAll();
+    return res.json( patients );
+  } catch (err) {
+    return next(err);
+  }
 });
 
 /** GET /[patient_mrn] => {patient: patient} */
 // GET A SINGLE PATIENT BY MRN /patients/:mrn
-router.get('/:mrn', async function (req, res, next) {
-	try {
-		const patient = await Patient.findOne(req.params.mrn);
-		return res.json( patient);
-	} catch (err) {
-		return next(err);
-	}
+router.get('/:mrn', isAuthenticated, async function(req, res, next) {
+  try {
+    const patient = await Patient.findOne(req.params.mrn);
+    return res.json({patient});
+  } catch (err) {
+    return next(err);
+  }
 });
 
 /** POST / {patientdata}  => {token: token} */
 // REGISTER A patient /patient/
 
 // ADD A NEW PATIENT
-router.post('/', async (req, res, next) => {
-	try {
-		delete req.body._token;
-		// Validate schema from json schema
-		const validation = validate(req.body, patientSchema);
-		if (!validation.valid) {
-			return next({
-				status: 400,
-				message: validation.errors.map((e) => e.stack)
-			});
-		}
+router.post('/', isAuthenticated, async (req, res, next) => {
+  try {
+    delete req.body._token;
+    // Validate schema from json schema
+    const validation = validate(req.body, patientSchema);
+    if (!validation.valid) {
+      return next({
+        status: 400,
+        message: validation.errors.map((e) => e.stack)
+      });
+    }
 
-		const newPatient = await Patient.register(req.body);
-		return res.status(201).json({
-			mrn: newPatient.mrn,
-			firstname: newPatient.firstname,
-			middlename: newPatient.middlename,
-			lastname: newPatient.lastname,
-			dob: newPatient.dob,
-			gender: newPatient.gender,
-			age_group: newPatient.age_group,
-			nationality: newPatient.nationality
-		});
-	} catch (e) {
-		return next(e);
-	}
+    const {
+      mrn,
+      firstname,
+      middlename,
+      lastname,
+      dob,
+      gender,
+      age_group,
+      nationality
+    } = req.body;
+    const newPatient = await Patient.register(
+      mrn,
+      firstname,
+      middlename,
+      lastname,
+      dob,
+      gender,
+      age_group,
+      nationality
+    );
+    return res.json({ newPatient, message: 'New patient added successfully' });
+
+    // delete req.body._token;
+    // // Validate schema from json schema
+    // const validation = validate(req.body, patientSchema);
+    // if (!validation.valid) {
+    //   return next({
+    //     status: 400,
+    //     message: validation.errors.map((e) => e.stack)
+    //   });
+    // }
+
+    // const newPatient = await Patient.register(req.body);
+    // return res.status(201).json({
+    //   mrn: newPatient.mrn,
+    //   firstname: newPatient.firstname,
+    //   middlename: newPatient.middlename,
+    //   lastname: newPatient.lastname,
+    //   dob: newPatient.dob,
+    //   gender: newPatient.gender,
+    //   age_group: newPatient.age_group,
+    //   nationality: newPatient.nationality
+    // });
+  } catch (e) {
+    return next(e);
+  }
 });
 
 /** PATCH /[handle] {patientData} => {patient: updatedPatient} */
