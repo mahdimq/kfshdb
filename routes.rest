@@ -166,7 +166,7 @@ Content-Type: application/json
 
 ### PATIENT ROUTES ###
 ### FIND ALL PATIENTS
-GET http://localhost:3001/patients/2348
+GET http://localhost:3001/patients/123456
 Content-Type: application/json
 
 {

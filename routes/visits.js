@@ -20,8 +20,8 @@ router.get('/', isAuthenticated, async (req, res, next) => {
 // GET A ALL PATIENT VISITS BY PATIENTS' MRN /visits/:mrn
 router.get('/:log', isAuthenticated, async (req, res, next) => {
   try {
-    const visits = await Visit.getVisits(req.params.log);
-    return res.json(visits);
+    const visit = await Visit.getVisits(req.params.log);
+    return res.json(visit);
   } catch (err) {
     return next(err);
   }

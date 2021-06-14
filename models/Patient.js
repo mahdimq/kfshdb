@@ -91,6 +91,7 @@ class Patient {
     // }
 
     return patient;
+
   }
 
   /** Update patient data with `data`.

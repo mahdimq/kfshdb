@@ -56,4 +56,14 @@ router.get('/department', ensureIsAdmin, async (req, res, next) => {
   }
 });
 
+// GET CPT QUANTITIES/queries/testquantities
+router.get('/tests', ensureIsAdmin, async (req, res, next) => {
+  try {
+    const report = await Query.cptQuantites(req.query);
+    return res.json(report);
+  } catch (err) {
+    return next(err);
+  }
+});
+
 module.exports = router;

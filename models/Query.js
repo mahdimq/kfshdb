@@ -132,6 +132,21 @@ class Query {
     )
     return report.rows;
   }
+
+  // GET CPT QUANTITIES
+  static async cptQuantites(data) {
+    const report = await db.query(
+      `SELECT t.cpt, t.description, SUM(vt.quantity) AS count
+      FROM tests AS t
+      JOIN visits_tests AS vt ON t.cpt = vt.test_id
+      JOIN visits AS v ON vt.visit_id = v.log_num
+      WHERE v.visit_date >= $1
+      AND v.visit_date <= $2
+      GROUP BY t.cpt, t.description`,
+      [data.start_date, data.end_date]
+    )
+    return report.rows;
+  }
 }
 
 
@@ -149,13 +164,10 @@ module.exports = Query;
       // GROUP BY ph.firstname, ph.lastname, department, procedure
       // ORDER BY department
 
-      // SELECT p.procedure_name AS procedure, d.department_name AS department, ph.firstname, ph.lastname, COUNT(p.id)
-      // FROM visits AS v 
-      // JOIN physicians AS ph ON v.physician_id = ph.id
-      // JOIN departments AS d ON ph.department_id = d.id
-      // JOIN procedures AS p ON v.procedure_id = p.id
-      // WHERE ph.id = 1
-      // AND v.visit_date >= '05-01-2021'
-      // AND v.visit_date <= '05-31-2021'
-      // GROUP BY department, ph.firstname, ph.lastname, procedure
-      // ORDER BY department
+      // SELECT t.cpt, t.description, SUM(vt.quantity)
+      // FROM tests AS t
+      // JOIN visits_tests AS vt ON t.cpt = vt.test_id
+      // JOIN visits AS v ON vt.visit_id = v.log_num
+      // WHERE v.visit_date >= '06-01-2021'
+      // AND v.visit_date <= '06-30-2021'
+      // GROUP BY t.cpt, t.description
